@@ -134,8 +134,8 @@ header{
 }
 
 #calendar-weekdays div, #calendar-days div {
-    width: 2.5rem;
-    height: 3rem;
+    width: 14.2857%;
+    height: 4rem;
     text-align: center;
 }
 

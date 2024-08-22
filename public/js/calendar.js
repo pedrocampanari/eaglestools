@@ -1,3 +1,4 @@
+
 const calendarDays = document.getElementById('calendar-days');
 const monthYear = document.getElementById('monthYear');
 let currentYear = new Date().getFullYear();
@@ -6,6 +7,11 @@ let currentMonth = new Date().getMonth();
 function renderCalendar(month, year) {
     const firstDay = new Date(year, month, 1).getDay();
     const lastDay = new Date(year, month + 1, 0).getDate();
+    const t = new Date().getDate();
+    const m = new Date().getMonth() + 1;
+    const y = new Date().getFullYear();
+
+    console.log(t, m, y);
 
     // Nomes dos meses em português
     const monthNames = [
@@ -29,6 +35,7 @@ function renderCalendar(month, year) {
     for (let i = 1; i <= lastDay; i++) {
         const dayElement = document.createElement('div');
         dayElement.textContent = i;
+        dayElement.setAttribute("class", "dayClicked");
         calendarDays.appendChild(dayElement);
     }
 }
