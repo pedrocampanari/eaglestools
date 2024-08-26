@@ -21,7 +21,8 @@ const taskSchema = new mongoose.Schema({
     },
     status: Boolean,
     term: Date,
-    conclused: Boolean
+    conclused: Boolean,
+    completionDate: Date
 });
 
 // Criando os modelos

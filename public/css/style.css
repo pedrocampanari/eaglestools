@@ -23,10 +23,42 @@ header{
 
 .box{
     border: 1px solid #C0C0C0;
-    height: 23rem;
+    height: auto;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+}
+
+.box > button{
+    width: 100%;
+    height: 3rem;
+    border: none;
+    color: #F4F4F4;
+    font-family: 'Roboto Condensed', Arial, sans-serif;
+    background-color: #00b6bd;
+}
+.box > button:hover{
+    width: 100%;
+    font-weight: bold;
+    background-color: #00e3eb;
+}
+
+.text-no-content{
+    padding: 8rem 0 8rem 0;
+}
+
+textarea {
+    border: none;
+    padding: 30px;
+
+}
+
+textarea::placeholder{
+    text-align: center;
+    line-height: 12rem;
+    font-size: 22;
+    font-style: italic;
 }
 
 .dinamic-box{
@@ -35,6 +67,12 @@ header{
     justify-content: center;
 }
 
+#dinamic-items-next{
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+}
 
 .task-buttons-box{
     display: flex;
@@ -58,8 +96,9 @@ header{
 
 .task{
     border: 1px solid #C0C0C0;
-    width: 52vh;
+    width: 108%;
     margin-bottom: 0.4rem;
+    padding: 0;
 }
 
 .info-task{
@@ -85,7 +124,67 @@ header{
 
 
 
+#dayClicked {
+    display: block;
+    width: 100%;
+    height: 100rem;
+    background-color: #009ba0;
+    color: white;
+    font-weight: 800;
+    margin-bottom: 3rem;
+    
+}
 
+#dayClicked > section {
+    padding: 10px;
+    background-color: #C0C0C0;
+    color: black;
+    font-weight: 300;
+
+}
+
+#dayClicked > section > div {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 100%;
+    height: auto;
+    row-gap: 10px;
+}
+
+#dayClicked > section > div > label {
+    width: 3rem;
+    text-align: justify;
+}
+
+
+.inputs-add {
+    margin-top: -0.7rem ;
+    height: 1.5rem;
+    border: none;
+}
+
+.inputs-add:hover{
+    border: none;
+
+}
+
+#taskAddButton{
+    background-color: #009ba0;
+    width: 100%;
+    border-radius: 10px 10px 10px;
+    padding: 10px;
+    height: 4.5rem;
+    margin:1rem 0px 0.5rem 0;
+    border: none;
+
+}
+
+#taskAddButton:hover{
+    background-color: #00f7ff;
+    font-weight: bold;
+    transition: 0.2s;
+}
 
 
 

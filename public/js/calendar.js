@@ -30,12 +30,14 @@ function renderCalendar(month, year) {
         const emptyCell = document.createElement('div');
         calendarDays.appendChild(emptyCell);
     }
+    
 
     // Adiciona os dias do mês
     for (let i = 1; i <= lastDay; i++) {
+        const date = new Date(`${year}/${month+1}/${i}`);
         const dayElement = document.createElement('div');
         dayElement.textContent = i;
-        dayElement.setAttribute("class", "dayClicked");
+        dayElement.setAttribute("onclick", `drawCreateNewTaskDinamic(this, "${date}")`);
         calendarDays.appendChild(dayElement);
     }
 }

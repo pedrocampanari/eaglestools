@@ -7,8 +7,18 @@ const schemas = require('../database/schemas');
 
 
 router.post('/api/tasks/', async (req, res)=>{
-    const memberTasks = await schemas.Task.find({user: req.body.id, conclused: false});
+    const memberTasks = await schemas.Task.find({user: req.body.id, conclused: false}).sort({ term: 1 });
     res.json(memberTasks);
+});
+
+router.post('/api/task/conclused/:id', async (req, res)=>{
+    try{
+        const task = await schemas.Task.findByIdAndUpdate(req.params.id, { conclused: true });
+        const taskDescription = await schemas.Task.findByIdAndUpdate(req.params.id, { description: req.body.description, completionDate: new Date()});
+        res.json(taskDescription);
+    }catch(err){
+        res.status(500).json({message: err.message});
+    }
 });
 
 router.get('/api/tasks/getAll/', async (req, res)=>{
@@ -23,6 +33,8 @@ router.get('/api/tasks/getAll/', async (req, res)=>{
 router.post('/api/task/addTask/', async (req, res)=>{
     try {
         const newTask = new schemas.Task(req.body);
+        const ownerNameQuery = await schemas.User.findById(req.body.ownerName);
+        newTask.ownerName = ownerNameQuery.name;
         await newTask.save();
         res.json(newTask);
     } catch (error) {
