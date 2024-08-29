@@ -10,6 +10,7 @@ app.use(express.static('public'));
 const databaseRouteTasks = require('./src/database/tasks');
 const databaseRouteUsers = require('./src/database/users');
 const safetyZoneRoute = require('./src/routes/safetyZone');
+
 app.use(databaseRouteTasks);
 app.use(databaseRouteUsers);
 app.use(safetyZoneRoute);

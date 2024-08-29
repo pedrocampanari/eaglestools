@@ -1,3 +1,5 @@
+const twillioSafetyCode = 'LKM6N3U1TQHU1ADZXR1UHS13';
+
 const btnAddUser = document.getElementById('userAddButton');
 const btnAddTask = document.getElementById('taskAddButton');
 const btnRemoveTask = document.getElementById('taskRemoveButton');

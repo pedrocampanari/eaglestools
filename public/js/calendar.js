@@ -36,6 +36,12 @@ function renderCalendar(month, year) {
     for (let i = 1; i <= lastDay; i++) {
         const date = new Date(`${year}/${month+1}/${i}`);
         const dayElement = document.createElement('div');
+
+        if  (date <= new Date()){
+            dayElement.setAttribute("class",  "dayLated");
+        }else{
+            dayElement.setAttribute("class",  "dayNormal");
+        }
         dayElement.textContent = i;
         dayElement.setAttribute("onclick", `drawCreateNewTaskDinamic(this, "${date}")`);
         calendarDays.appendChild(dayElement);

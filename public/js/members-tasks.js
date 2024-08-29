@@ -22,6 +22,13 @@ async function queryTasks() {
         const data = await response.json();
         console.log(data);
 
+        if (data.length == 0){
+
+            taskInProgressContainer.innerHTML = `<span class="span-roboto-condensed p-3 text-align-center">Sem tarefas no momento!</span>`
+            console.log('No tasks found');
+            return;
+        }
+
 
         data.forEach(element => {
             taskInProgressContainer.innerHTML += `
@@ -61,6 +68,65 @@ async function queryTasks() {
     }
 }
 
+async function queryTasksConclused() {
+    const taskConclusedContainer = document.getElementById('historic');
+    try {
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id: memberId })
+        };
+
+        const response = await fetch('/api/tasks/conlusedAll', options);
+        const data = await response.json();
+        console.log(data);
+
+        if (data.length == 0){
+
+            taskConclusedContainer.innerHTML = `<span class="span-roboto-condensed p-3 text-align-center">Sem tarefas concluídas!</span>`
+            console.log('No tasks found');
+            return;
+        }
+
+
+        data.forEach(element => {
+            taskConclusedContainer.innerHTML += `
+                <div class="row task2">
+                    <div class="col-10 pt-2 pb-2">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col p-0">
+                                    <h4 class="info-task">${element.name} - Resp. ${element.ownerName}</h4>
+                                </div>
+                            </div>
+                        <div class="row">
+                            <div class="col p-0">
+                                <h4 class="info-task">Data de conclusão: <span class="span-date">${(new Date(element.completionDate).getDate()) < 10 ? "0" + (new Date(element.completionDate).getDate()) : (new Date(element.completionDate).getDate())}/${(new Date(element.completionDate).getMonth() + 1) < 10 ? "0" + (new Date(element.completionDate).getMonth() + 1) : (new Date(element.completionDate).getMonth() + 1)}/${new Date(element.completionDate).getFullYear()}</span></h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col p-0">
+                                <h4 class="info-task">Status: <span class="span-status-conclused">Concluído</span></h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-2 task-buttons-box p-1">
+                    <button onclick="showDraft(this)" value="${element._id}">
+                        <img src="../assets/img/icon/draft.svg">
+                    </button>
+                </div>
+            </div>
+        `
+        });
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
+queryTasksConclused();
 queryTasks();
 
 function clickoutElement(element, day) {
@@ -180,8 +246,19 @@ async function sendTask(element){
 function editDraft(element){
     const idTask = element.value;
     const textAreaEdit = document.getElementById('placeTextArea').innerHTML = `<textarea rows="8" cols="100"  placeholder="Escreva aqui..."></textarea><button value="${idTask}" onclick="sendTask(this)">Enviar relatório</button>`;
+    window.location.href = '#top';
 }
 
 
+function reloadWindow(){
+    window.location.reload();
+}
 
+async function showDraft(element){
+    const id = element.value;
+    const response = await fetch('/api/task/conclused/'+ id, {method: 'GET', headers:{"content-type": 'application/json'}});
+    const data = await response.json();
+    const textAreaEdit = document.getElementById('placeTextArea').innerHTML = `<textarea rows="8" cols="100" disabled  placeholder="Escreva aqui...">${data.description}</textarea><button onclick="reloadWindow()">Fechar relatório</button>`;
+    window.location.href = '#top';
+}
 

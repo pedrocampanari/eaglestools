@@ -11,6 +11,20 @@ router.post('/api/tasks/', async (req, res)=>{
     res.json(memberTasks);
 });
 
+router.post('/api/tasks/conlusedAll', async(req, res)=>{
+    const memberTasks = await schemas.Task.find({user: req.body.id, conclused: true}).sort({ completionDate: 1 });
+    res.json(memberTasks);
+});
+
+router.get('/api/task/conclused/:id', async (req, res)=>{
+    try {
+        const task = await schemas.Task.findById(req.params.id);
+        res.json(task);
+    } catch (error) {
+        res.status(404).json({ message: 'Task not found' });
+    }
+});
+
 router.post('/api/task/conclused/:id', async (req, res)=>{
     try{
         const task = await schemas.Task.findByIdAndUpdate(req.params.id, { conclused: true });

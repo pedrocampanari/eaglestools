@@ -101,6 +101,13 @@ textarea::placeholder{
     padding: 0;
 }
 
+.task2{
+    border: 1px solid #C0C0C0;
+    width: 98%;
+    margin-bottom: 0.4rem;
+    padding: 0;
+}
+
 .info-task{
     font-family: "Roboto Condensed", sans-serif;
     font-optical-sizing: auto;
@@ -120,6 +127,11 @@ textarea::placeholder{
 .span-status-atrasado {
     color: #FF3131;
 }
+
+.span-status-conclused {
+    color: #00ddec;
+}
+
 
 
 
@@ -156,6 +168,7 @@ textarea::placeholder{
     width: 3rem;
     text-align: justify;
 }
+
 
 
 .inputs-add {
@@ -244,7 +257,21 @@ textarea::placeholder{
 }
 
 #calendar-days > div:hover{
-    border: 0.5px solid #00ffea;
+    
     cursor: pointer;
 }
 
+.dayLated:hover{
+    background-color: #ce00008a;
+    border: 1px solid #FF3131;
+    color: #ffffff;
+    font-weight: bold
+
+}
+
+.dayNormal:hover{
+    border: 0.5px solid #00ff55;
+    background-color: #00ff5594;
+    color: #ffffff;
+    font-weight: bold
+}
