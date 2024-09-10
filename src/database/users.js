@@ -38,11 +38,56 @@ router.get('/api/user/getUsers/', async (req, res) => {
     }
 });
 
+router.get('/api/user/getUsersNoRoot/', async (req, res) => {
+    try {
+        const users = await schemas.User.find({ root: false });
+        console.log(users);
+        res.json(users);
+    } catch (err) {
+        res.status(500).json({ message: 'Error fetching users' });
+    }
+});
+
+router.get('/api/user/getTasksDonesForUser/:id', async (req, res)=> {
+    try {
+        const id = req.params.id;
+        const user = await schemas.User.findById(id);
+        if(!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+            const tasks = await schemas.Task.find({ user: user._id, conclused: true });
+        res.json(tasks);
+    } catch(err) {
+        res.status(500).json({ message: 'Error fetching tasks' });
+    }
+
+});
+
+router.get('/api/user/getTasksDelaysForUser/:id', async (req, res)=> {
+    try {
+        const id = req.params.id;
+        const user = await schemas.User.findById(id);
+        if(!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+            const tasks = await schemas.Task.find({ user: user._id, status: false });
+        res.json(tasks);
+    } catch(err) {
+        res.status(500).json({ message: 'Error fetching tasks' });
+    }
+
+});
+
+
+
+
+
+
 router.delete('/api/user/removeUser/', async (req, res) => {
-    try{
-        await schemas.User.deleteOne({_id: req.body.id});
+    try {
+        await schemas.User.deleteOne({ _id: req.body.id });
         res.status(200).json({ message: 'Users deleted successfully' });
-    }catch(err){
+    } catch (err) {
         res.status(500).json({ message: 'Error deleting users' });
     }
 })

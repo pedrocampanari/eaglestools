@@ -28,45 +28,92 @@
             </div>
         </div>
     </header>
+    <main>
+        <section class="container pt-4 pb-4">
+            <div class="row">
+                <div class="col-6">
+                    <h3 class="roboto-condensed">Dashboard</h3>
+                </div>
+                <div class="col-2 d-flex justify-content-end">
+                    <select id="filter-select-main">
+                        <option value="allInsights" class="full">Relatório Geral</option>
+                        <option value="aloneInsights" class="full">Relatório individual</option>
+                    </select>
+                    <select id="filter-select-child">
+                        <option value="deliver" class="full">Entregas</option>
+                        <option value="delay" class="full">Atrasos</option>
+                    </select>
+                </div>
+                <div class="col-4">
+                    <h3 class="roboto-condensed">Tarefas em andamento</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8">
+                    <div class="container-fluid p-0">
+                        <div class="row">
+                            <div class="col">
+                                <div class="box">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <canvas id="myChart"></canvas>
+                                            </div>
+                                            <div class="col-8">
+                                                <canvas id="myChart2"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row pt-3">
+                            <div class="col">
+                                <h3 class="roboto-condensed">Exibição de relatórios</h3>    
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="box" id="placeTextArea">
+                                    <span class="span-roboto-condensed text-no-content">
+                                        Clique em <span class="icon-draft"><img src="../assets/img/icon/draft.svg"
+                                                alt="" srcset=""></span> para ver relatórios
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row pt-3">
+                            <div class="col">
+                                <h3 class="roboto-condensed">Tarefas concluídas</h3>    
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="box pt-2" id="historic"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="container-fluid p-0 pl-2">
+                        <div class="row">
+                            <div class="col">
+                                <div class="dinamic-box container-fluid">
+                                    <div class="container-fluid pl-1 pt-2" id="dinamic-items-next">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
+    </main>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <!-- <canvas id="myChart" width="100px" height="100px"></canvas> -->
-
-
+    <footer>
+        
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
@@ -77,9 +124,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
         integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
         crossorigin="anonymous"></script>
-    <script src="../js/chart.js">
-        
-    </script>
+    <script src="../js/chart.js"></script>
+    <script src="../js/admin-tasks.js"></script>
 </body>
 
 </html>

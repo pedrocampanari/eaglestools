@@ -1,20 +1,12 @@
-
 const taskInProgressContainer = document.getElementById('dinamic-items-next');
-
-
-const url = new URL(window.location.href);
-var memberId = url.pathname.split('/').pop();
-
-
 async function queryTasks() {
 
     try {
         const options = {
-            method: 'POST',
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ id: memberId })
+            }
         };
 
         const response = await fetch('/api/tasks/', options);
@@ -52,11 +44,11 @@ async function queryTasks() {
                     </div>
                 </div>
                 <div class="col-2 task-buttons-box p-1">
-                    <button onclick="editDraft(this)" value="${element._id}">
-                        <img src="../assets/img/icon/draft.svg">
+                    <button onclick="removeTask(this)" value="${element._id}">
+                        <img src="../assets/img/icon/remove.svg" class="redHover">
                     </button>
                     <button onclick="sendTask(this)" value="${element._id}">
-                        <img src="../assets/img/icon/done.svg">
+                        <img src="../assets/img/icon/done.svg" class="greenHover">
                     </button>
                 </div>
             </div>
@@ -71,11 +63,10 @@ async function queryTasksConclused() {
     const taskConclusedContainer = document.getElementById('historic');
     try {
         const options = {
-            method: 'POST',
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ id: memberId })
+            }
         };
 
         const response = await fetch('/api/tasks/conlusedAll', options);
@@ -114,7 +105,10 @@ async function queryTasksConclused() {
                 </div>
                 <div class="col-2 task-buttons-box p-1">
                     <button onclick="showDraft(this)" value="${element._id}">
-                        <img src="../assets/img/icon/draft.svg">
+                        <img src="../assets/img/icon/draft.svg" class="cianHover">
+                    </button>
+                    <button onclick="removeTask(this)" value="${element._id}">
+                        <img src="../assets/img/icon/waste.svg" class="redHover">
                     </button>
                 </div>
             </div>
@@ -126,96 +120,23 @@ async function queryTasksConclused() {
 }
 
 queryTasksConclused();
+
 queryTasks();
 
-function clickoutElement(element, day) {
-    document.body.addEventListener("dblclick", function(event) {
-        // Verifica se o clique foi fora do elemento
-        if (!element.contains(event.target)) {
-            // Altera as propriedades do elemento quando o clique for fora
-            element.setAttribute("id", "");
-            element.style.display = 'block';
-            element.style.width = "14.2857%";
-            element.style.height = "4rem";
-            element.innerHTML = day;
-            console.log("entrou")
-        }
-        console.log("click");
-    });
+
+function reloadWindow(){
+    window.location.reload();
 }
 
-
-function drawCreateNewTaskDinamic(element, date) {
-    const dateWithoutFormatation = new Date(date);
-    const formatedDate = dateWithoutFormatation.toISOString().split('T')[0];
-    element.setAttribute("id", "dayClicked");
-    element.setAttribute("onclick", `clickoutElement(this, ${dateWithoutFormatation.getDate()})`);
-    element.style.display = 'block';
-    element.style.width = '100%';
-    element.style.height = 'auto';
-    const createNewTaskContainer = element;
-    
-
-    createNewTaskContainer.innerHTML += `
-        <section class="addNewTask">
-            <h5>Adicionar nova tarefa</h5>
-            <div>
-                <label for="inp-username">Nome: </label>
-                <input class="inputs-add" type="text" name="nameTask" id="inp-name-task">
-                <label for="inp-term">Prazo: </label>
-                <input disabled class="inputs-add" type="date" name="date" id="inp-term" value="${formatedDate}">
-            </div>  
-            <div>
-                <button id="taskAddButton">Add</button>
-            </div>
-
-        </section>
-    
-    `;
-
-    btnEnable(element);
+async function showDraft(element){
+    const id = element.value;
+    const response = await fetch('/api/task/conclused/'+ id, {method: 'GET', headers:{"content-type": 'application/json'}});
+    const data = await response.json();
+    const textAreaEdit = document.getElementById('placeTextArea').innerHTML = `<textarea rows="8" cols="100" disabled  placeholder="Escreva aqui...">${data.description}</textarea><button onclick="reloadWindow()">Fechar relatório</button>`;
+    window.location.href = '#top';
 }
-
-
-function btnEnable(element) {
-    const btnAddTask = document.getElementById('taskAddButton');
-    btnAddTask.addEventListener("click", async () => {
-        const nameTask = document.getElementById('inp-name-task').value;
-        const date = document.getElementById('inp-term').value;
-        const user = memberId;
-
-        console.log(date, user);
-        const options = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                name: nameTask,
-                description: '',
-                ownerName: memberId,
-                user: user,
-                term: date,
-                status: new Date(date) >= new Date(),
-                conclused: false
-            })
-        }
-        const response = await fetch('/api/task/addTask/', options);
-        const data = response.json();
-        data.then(data => {
-            console.log(data);
-        });
-
-        alert('Nova tarefa adicionada!');
-        window.location.reload();
-
-    });
-}
-
 
 async function sendTask(element){
-    const textArea = document.getElementById('placeTextArea').getElementsByTagName('textarea')[0];
-    const text = textArea.value;
     const idTask = element.value;
 
     const options = {
@@ -224,7 +145,7 @@ async function sendTask(element){
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            description: text
+            description: ''
         })
     }
 
@@ -242,22 +163,28 @@ async function sendTask(element){
 }
 
 
-function editDraft(element){
-    const idTask = element.value;
-    const textAreaEdit = document.getElementById('placeTextArea').innerHTML = `<textarea rows="8" cols="100"  placeholder="Escreva aqui..."></textarea><button value="${idTask}" onclick="sendTask(this)">Enviar relatório</button>`;
-    window.location.href = '#top';
-}
+async function removeTask(element) {
+    const taskId = element.value;
 
+    const options = {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id: taskId })
+    };
 
-function reloadWindow(){
+    try {
+        const response = await fetch('/api/task/removeTask/', options);
+        const data = response.json();
+        alert('Removido com sucesso!');
+    } catch (err) {
+        alert(err);
+    }
     window.location.reload();
+
+    
 }
 
-async function showDraft(element){
-    const id = element.value;
-    const response = await fetch('/api/task/conclused/'+ id, {method: 'GET', headers:{"content-type": 'application/json'}});
-    const data = await response.json();
-    const textAreaEdit = document.getElementById('placeTextArea').innerHTML = `<textarea rows="8" cols="100" disabled  placeholder="Escreva aqui...">${data.description}</textarea><button onclick="reloadWindow()">Fechar relatório</button>`;
-    window.location.href = '#top';
-}
+
 

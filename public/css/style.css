@@ -275,3 +275,23 @@ textarea::placeholder{
     color: #ffffff;
     font-weight: bold
 }
+
+footer{
+    background-color: #00e3eb;
+    height: 10rem;
+}
+
+.redHover:hover{
+    border: 2px solid #ce0000;
+    object-fit: cover; 
+}
+
+.cianHover:hover{
+    border: 2px solid #00f7ff;
+    object-fit: cover; 
+}
+
+.greenHover:hover{
+    border: 2px solid #00ff40;
+    object-fit: cover; 
+}

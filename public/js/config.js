@@ -107,7 +107,8 @@ btnAddTask.addEventListener("click", async () => {
     const date = document.getElementById('inp-term').value;
     const user = selectedOption;
 
-    console.log(date, user);
+    console.log(selectedOption)
+
     const options = {
         method: 'POST',
         headers: {
@@ -115,12 +116,14 @@ btnAddTask.addEventListener("click", async () => {
         },
         body: JSON.stringify({
             name: nameTask,
-            ownerName: selectedOptionOwner,
+            description: '',
+            ownerName: `${selectedOption}`,
             user: user,
             term: date,
-            status: true,
+            status: new Date(date) >= new Date(),
             conclused: false
         })
+
     }
     const response = await fetch('/api/task/addTask/', options);
     const data = response.json();
@@ -130,7 +133,7 @@ btnAddTask.addEventListener("click", async () => {
 
     alert('Nova tarefa adicionada!');
 
-    window.location.reload();
+    //window.location.reload();
 
 });
 
