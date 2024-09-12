@@ -9,13 +9,13 @@ app.use(express.static('public'));
 //Routes added
 const databaseRouteTasks = require('./src/database/tasks');
 const databaseRouteUsers = require('./src/database/users');
-const safetyZoneRoute = require('./src/routes/safetyZone');
+// const safetyZoneRoute = require('./src/routes/safetyZone');
 const schemas = require('./src/database/schemas');
 
 
 app.use(databaseRouteTasks);
 app.use(databaseRouteUsers);
-app.use(safetyZoneRoute);
+// app.use(safetyZoneRoute);
 
 
 //Connect to MongoDb
@@ -57,7 +57,15 @@ app.post('/login', async (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/public/html/login.html');
+    res.sendFile(__dirname + '/public/html/signup.html');
+});
+
+app.get('/safetyZone/config/root/', (req, res)=>{
+    res.sendFile(__dirname + '/public/html/config.html');
+});
+
+app.get('/safetyZone/config/root/js/', (req, res)=>{
+    res.sendFile(__dirname + '/public/js/config.js');
 });
 
 app.listen(3000, '0.0.0.0', () => {

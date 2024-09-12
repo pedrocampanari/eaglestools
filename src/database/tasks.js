@@ -7,30 +7,30 @@ const schemas = require('../database/schemas');
 
 
 router.post('/api/tasks/', async (req, res) => {
-    const memberTasks = await schemas.Task.find({user: req.body.id, conclused: false}).sort({ term: 1 });
+    const memberTasks = await schemas.Task.find({user: req.body.id, concluded: false}).sort({ term: 1 });
     res.json(memberTasks);
 });
 
 router.get('/api/tasks/', async (req, res) => {
-    const memberTasks = await schemas.Task.find({conclused: false}).sort({ term: 1 });
+    const memberTasks = await schemas.Task.find({concluded: false}).sort({ term: 1 });
     res.json(memberTasks);
 });
 
-router.post('/api/tasks/conlusedAll', async(req, res) => {
-    const memberTasks = await schemas.Task.find({user: req.body.id, conclused: true}).sort({ completionDate: 1 });
+router.post('/api/tasks/concludedAll/', async(req, res) => {
+    const memberTasks = await schemas.Task.find({user: req.body.id, concluded: true}).sort({ completionDate: 1 });
     res.json(memberTasks);
 });
 
-router.get('/api/tasks/conlusedAll', async (req, res) =>{
+router.get('/api/tasks/concludedAll/', async (req, res) =>{
     try {
-        const task = await schemas.Task.find({conclused: true});
+        const task = await schemas.Task.find({concluded: true});
         res.json(task);
     } catch (error) {
         res.status(404).json({ message: 'Task not found' });
     }
 });
 
-router.get('/api/task/conclused/:id', async (req, res) => {
+router.get('/api/task/concluded/:id', async (req, res) => {
     try {
         const task = await schemas.Task.findById(req.params.id);
         res.json(task);
@@ -39,9 +39,9 @@ router.get('/api/task/conclused/:id', async (req, res) => {
     }
 });
 
-router.post('/api/task/conclused/:id', async (req, res)=>{
+router.post('/api/task/concluded/:id', async (req, res)=>{
     try{
-        const task = await schemas.Task.findByIdAndUpdate(req.params.id, { conclused: true });
+        const task = await schemas.Task.findByIdAndUpdate(req.params.id, { concluded: true });
         const taskDescription = await schemas.Task.findByIdAndUpdate(req.params.id, { description: req.body.description, completionDate: new Date()});
         res.json(taskDescription);
     }catch(err){

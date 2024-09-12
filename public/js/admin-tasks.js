@@ -59,8 +59,8 @@ async function queryTasks() {
     }
 }
 
-async function queryTasksConclused() {
-    const taskConclusedContainer = document.getElementById('historic');
+async function queryTasksConcluded() {
+    const taskConcludedContainer = document.getElementById('historic');
     try {
         const options = {
             method: 'GET',
@@ -69,20 +69,20 @@ async function queryTasksConclused() {
             }
         };
 
-        const response = await fetch('/api/tasks/conlusedAll', options);
+        const response = await fetch('/api/tasks/concludedAll', options);
         const data = await response.json();
         console.log(data);
 
         if (data.length == 0){
 
-            taskConclusedContainer.innerHTML = `<span class="span-roboto-condensed p-3 text-align-center">Sem tarefas concluídas!</span>`
+            taskConcludedContainer.innerHTML = `<span class="span-roboto-condensed p-3 text-align-center">Sem tarefas concluídas!</span>`
             console.log('No tasks found');
             return;
         }
 
 
         data.forEach(element => {
-            taskConclusedContainer.innerHTML += `
+            taskConcludedContainer.innerHTML += `
                 <div class="row task2">
                     <div class="col-10 pt-2 pb-2">
                         <div class="container-fluid">
@@ -98,7 +98,7 @@ async function queryTasksConclused() {
                         </div>
                         <div class="row">
                             <div class="col p-0">
-                                <h4 class="info-task">Status: <span class="span-status-conclused">Concluído</span></h4>
+                                <h4 class="info-task">Status: <span class="span-status-concluded">Concluído</span></h4>
                             </div>
                         </div>
                     </div>
@@ -119,7 +119,7 @@ async function queryTasksConclused() {
     }
 }
 
-queryTasksConclused();
+queryTasksConcluded();
 
 queryTasks();
 
@@ -130,7 +130,7 @@ function reloadWindow(){
 
 async function showDraft(element){
     const id = element.value;
-    const response = await fetch('/api/task/conclused/'+ id, {method: 'GET', headers:{"content-type": 'application/json'}});
+    const response = await fetch('/api/task/concluded/'+ id, {method: 'GET', headers:{"content-type": 'application/json'}});
     const data = await response.json();
     const textAreaEdit = document.getElementById('placeTextArea').innerHTML = `<textarea rows="8" cols="100" disabled  placeholder="Escreva aqui...">${data.description}</textarea><button onclick="reloadWindow()">Fechar relatório</button>`;
     window.location.href = '#top';
@@ -150,7 +150,7 @@ async function sendTask(element){
     }
 
     try{
-        const response = await fetch('/api/task/conclused/' + idTask, options);
+        const response = await fetch('/api/task/concluded/' + idTask, options);
         const data = response.json();
         console.log(data);
         alert('Tarefa enviada com sucesso!');

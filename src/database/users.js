@@ -55,7 +55,7 @@ router.get('/api/user/getTasksDonesForUser/:id', async (req, res)=> {
         if(!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-            const tasks = await schemas.Task.find({ user: user._id, conclused: true });
+            const tasks = await schemas.Task.find({ user: user._id, concluded: true });
         res.json(tasks);
     } catch(err) {
         res.status(500).json({ message: 'Error fetching tasks' });
@@ -70,7 +70,7 @@ router.get('/api/user/getTasksDelaysForUser/:id', async (req, res)=> {
         if(!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-            const tasks = await schemas.Task.find({ user: user._id, status: false });
+            const tasks = await schemas.Task.find({ user: user._id, status: false, concluded: true });
         res.json(tasks);
     } catch(err) {
         res.status(500).json({ message: 'Error fetching tasks' });

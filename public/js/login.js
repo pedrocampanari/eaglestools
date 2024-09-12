@@ -1,4 +1,7 @@
 const btnSignIn = document.getElementsByClassName("logIn")[0];
+const btnSignUp = document.getElementsByClassName("signUp")[0];
+
+
 const form = document.querySelector('form');
 
 form.addEventListener('submit', (event) => {
@@ -32,20 +35,32 @@ btnSignIn.addEventListener("click", async () => {
     }
 });
 
+btnSignUp.addEventListener("click", async () => {
+    const inpUserName = document.getElementById('inp-username').value;
+    const inpEmail = document.getElementById('inp-email').value;
+    const inpPassword = document.getElementById('inp-password').value;
 
-const signInBtn = document.getElementById("signIn");
-const signUpBtn = document.getElementById("signUp");
-const fistForm = document.getElementById("form1");
-const secondForm = document.getElementById("form2");
-const container = document.querySelector(".container");
+    let bodyRequest = {
+        "name": inpUserName,
+        "email": inpEmail,
+        "password": inpPassword,
+        "root": false
+    };
 
-signInBtn.addEventListener("click", () => {
-	container.classList.remove("right-panel-active");
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bodyRequest),
+    };
+
+    const response = await fetch('/api/user/add/', options);
+    const data = await response.json();
+    console.log(data);
+
+    alert('Novo Usuário Adicionado! Faça o login');
+
+    window.location.reload();
+
 });
-
-signUpBtn.addEventListener("click", () => {
-	container.classList.add("right-panel-active");
-});
-
-fistForm.addEventListener("submit", (e) => e.preventDefault());
-secondForm.addEventListener("submit", (e) => e.preventDefault());
