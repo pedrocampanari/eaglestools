@@ -21,6 +21,7 @@ const taskSchema = new mongoose.Schema({
     },
     status: Boolean,
     term: Date,
+    urgency: Number,
     concluded: Boolean,
     completionDate: Date
 });

@@ -31,7 +31,7 @@ btnSignIn.addEventListener("click", async () => {
     if (responseData.status == 200){
        window.location.href = responseData.redirectUrl;
     }else{
-        alert("Invalid email or password");
+        drawAlert('error', responseData.message);
     }
 });
 
@@ -40,27 +40,32 @@ btnSignUp.addEventListener("click", async () => {
     const inpEmail = document.getElementById('inp-email').value;
     const inpPassword = document.getElementById('inp-password').value;
 
-    let bodyRequest = {
-        "name": inpUserName,
-        "email": inpEmail,
-        "password": inpPassword,
-        "root": false
-    };
+    if (!(inpUserName == '' || inpEmail == '' || inpPassword == '')){
+        let bodyRequest = {
+            "name": inpUserName,
+            "email": inpEmail,
+            "password": inpPassword,
+            "root": false
+        };
+    
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(bodyRequest),
+        };
+    
+        const response = await fetch('/api/user/add/', options);
+        const data = await response.json();
+        console.log(data);
+    
+        drawAlert('success', 'Novo Usuário Adicionado! Faça o login');
+    }else{
+        drawAlert('error', 'Preencha todos os campos');
+    }
 
-    const options = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(bodyRequest),
-    };
-
-    const response = await fetch('/api/user/add/', options);
-    const data = await response.json();
-    console.log(data);
-
-    alert('Novo Usuário Adicionado! Faça o login');
-
-    window.location.reload();
+    
+    // window.location.reload();
 
 });

@@ -1,6 +1,22 @@
 const taskInProgressContainer = document.getElementById('dinamic-items-next');
-async function queryTasks() {
 
+
+const url = new URL(window.location.href);
+var memberId = url.pathname.split('/').pop();
+
+const memberInfoRequest = async ()=>{
+    await fetch(`/api/userInfo/${memberId}`)
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('username').innerHTML = data.name;
+    }).catch((err)=>{
+        console.error(err);
+    });
+}
+
+memberInfoRequest();
+
+async function queryTasks() {
     try {
         const options = {
             method: 'GET',

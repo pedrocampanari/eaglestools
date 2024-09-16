@@ -1,9 +1,18 @@
-
 const taskInProgressContainer = document.getElementById('dinamic-items-next');
-
-
 const url = new URL(window.location.href);
 var memberId = url.pathname.split('/').pop();
+
+
+const memberInfoRequest = async ()=>{
+    await fetch(`/api/userInfo/${memberId}`)
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('username').innerHTML = data.name;
+    }).catch((err)=>{
+        drawAlert('error', err);
+    });
+}
+memberInfoRequest();
 
 
 async function queryTasks() {
@@ -21,10 +30,10 @@ async function queryTasks() {
         const data = await response.json();
         console.log(data);
 
-        if (data.length == 0){
+        if (data.length == 0) {
 
             taskInProgressContainer.innerHTML = `<span class="span-roboto-condensed p-3 text-align-center">Sem tarefas no momento!</span>`
-            console.log('No tasks found');
+            drawAlert('error', 'No tasks found');
             return;
         }
 
@@ -41,12 +50,12 @@ async function queryTasks() {
                             </div>
                         <div class="row">
                             <div class="col p-0">
-                                <h4 class="info-task">Prazo: <span class="span-date">${(new Date(element.term).getDate() + 1) < 10 ? "0" + (new Date(element.term).getDate() + 1) : (new Date(element.term).getDate() + 1)}/${(new Date(element.term).getMonth() + 1) < 10 ? "0" + (new Date(element.term).getMonth() + 1) : (new Date(element.term).getMonth() + 1)}/${new Date(element.term).getFullYear()}</span></h4>
+                                <h4 class="info-task">Prazo: <span class="span-date">${(new Date(element.term).getDate()) < 10 ? "0" + (new Date(element.term).getDate()) : (new Date(element.term).getDate())}/${(new Date(element.term).getMonth() + 1) < 10 ? "0" + (new Date(element.term).getMonth() + 1) : (new Date(element.term).getMonth() + 1)}/${new Date(element.term).getFullYear()} - ${new Date(element.term).getHours()}:${new Date(element.term).getMinutes() > 10? new Date(element.term).getMinutes(): '0' + new Date(element.term).getMinutes()}</span></h4>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col p-0">
-                                <h4 class="info-task">Status: <span class="span-status-${ new Date(element.term) >= new Date() ? 'pendente' : 'atrasado'}">${new Date(element.term) >= new Date() ? 'Pendente' : 'Atrasado'}</span></h4>
+                                <h4 class="info-task">Status: <span class="span-status-${new Date(element.term) >= new Date() ? 'pendente' : 'atrasado'}">${new Date(element.term) >= new Date() ? 'Pendente' : 'Atrasado'}</span></h4>
                             </div>
                         </div>
                     </div>
@@ -63,7 +72,7 @@ async function queryTasks() {
         `
         });
     } catch (error) {
-        console.error('Error fetching data:', error);
+        drawAlert('error', 'Error fetching data:' + error);
     }
 }
 
@@ -82,10 +91,10 @@ async function queryTasksConcluded() {
         const data = await response.json();
         console.log(data);
 
-        if (data.length == 0){
+        if (data.length == 0) {
 
             taskConcludedContainer.innerHTML = `<span class="span-roboto-condensed p-3 text-align-center">Sem tarefas concluídas!</span>`
-            console.log('No tasks found');
+            drawAlert('error', 'No tasks found');
             return;
         }
 
@@ -121,7 +130,7 @@ async function queryTasksConcluded() {
         `
         });
     } catch (error) {
-        console.error('Error fetching data:', error);
+        drawAlert('error', 'Error fetching data:' + error);
     }
 }
 
@@ -129,10 +138,8 @@ queryTasksConcluded();
 queryTasks();
 
 function clickoutElement(element, day) {
-    document.body.addEventListener("dblclick", function(event) {
-        // Verifica se o clique foi fora do elemento
+    document.body.addEventListener("dblclick", function (event) {
         if (!element.contains(event.target)) {
-            // Altera as propriedades do elemento quando o clique for fora
             element.setAttribute("id", "");
             element.style.display = 'block';
             element.style.width = "14.2857%";
@@ -147,31 +154,31 @@ function clickoutElement(element, day) {
 
 function drawCreateNewTaskDinamic(element, date) {
     const dateWithoutFormatation = new Date(date);
-    const formatedDate = dateWithoutFormatation.toISOString().split('T')[0];
+    const formatedDate = dateWithoutFormatation.toISOString().split('T')[0]; // Mantém apenas a data no formato YYYY-MM-DD
     element.setAttribute("id", "dayClicked");
     element.setAttribute("onclick", `clickoutElement(this, ${dateWithoutFormatation.getDate()})`);
     element.style.display = 'block';
     element.style.width = '100%';
     element.style.height = 'auto';
     const createNewTaskContainer = element;
-    
 
     createNewTaskContainer.innerHTML += `
-        <section class="addNewTask">
-            <h5>Adicionar nova tarefa</h5>
-            <div>
-                <label for="inp-username">Nome: </label>
-                <input class="inputs-add" type="text" name="nameTask" id="inp-name-task">
-                <label for="inp-term">Prazo: </label>
-                <input disabled class="inputs-add" type="date" name="date" id="inp-term" value="${formatedDate}">
-            </div>  
-            <div>
-                <button id="taskAddButton">Add</button>
-            </div>
+    <section class="addNewTask">
+        <h5>Adicionar nova tarefa</h5>
+        <div>
+            <label for="inp-name-task">Nome: </label>
+            <input class="inputs-add" type="text" name="nameTask" id="inp-name-task">
+            <label for="inp-term">Prazo: </label>
+            <input class="inputs-add" type="datetime-local" name="date" id="inp-term" value="${formatedDate}T00:00" min="${formatedDate}T00:00" max="${formatedDate}T23:59">
+            <label for="inp-name-task" style="width: 100%">Quão importante esta tarefa é? (0-5) <input class="inputs-add task-urgency" value="0" type="number" min="0" max="5" id="task-urgency" style="width: 10%"></label>
+            
+        </div>  
+        <div>
+            <button id="taskAddButton">Add</button>
+        </div>
+    </section>
+`;
 
-        </section>
-    
-    `;
 
     btnEnable(element);
 }
@@ -196,6 +203,7 @@ function btnEnable(element) {
                 ownerName: memberId,
                 user: user,
                 term: date,
+                urgency: document.getElementById('task-urgency').value,
                 status: new Date(date) >= new Date(),
                 concluded: false
             })
@@ -206,14 +214,14 @@ function btnEnable(element) {
             console.log(data);
         });
 
-        alert('Nova tarefa adicionada!');
-        window.location.reload();
+        //window.location.reload();
+        drawAlert('success', 'Nova tarefa adicionada!');
 
     });
 }
 
 
-async function sendTask(element){
+async function sendTask(element) {
     const textArea = document.getElementById('placeTextArea').getElementsByTagName('textarea')[0];
     const text = textArea.value;
     const idTask = element.value;
@@ -228,34 +236,32 @@ async function sendTask(element){
         })
     }
 
-    try{
+    try {
         const response = await fetch('/api/task/concluded/' + idTask, options);
         const data = response.json();
         console.log(data);
-        alert('Tarefa enviada com sucesso!');
-    }catch(err){
-        alert('ERRO NO PROCESSO!');
-        console.log(err);
+        drawAlert('success', 'Tarefa enviada com sucesso!');
+    } catch (err) {
+        drawAlert('error', err);
     }
 
-    window.location.reload();
 }
 
 
-function editDraft(element){
+function editDraft(element) {
     const idTask = element.value;
     const textAreaEdit = document.getElementById('placeTextArea').innerHTML = `<textarea rows="8" cols="100"  placeholder="Escreva aqui..."></textarea><button value="${idTask}" onclick="sendTask(this)">Enviar relatório</button>`;
     window.location.href = '#top';
 }
 
 
-function reloadWindow(){
+function reloadWindow() {
     window.location.reload();
 }
 
-async function showDraft(element){
+async function showDraft(element) {
     const id = element.value;
-    const response = await fetch('/api/task/concluded/'+ id, {method: 'GET', headers:{"content-type": 'application/json'}});
+    const response = await fetch('/api/task/concluded/' + id, { method: 'GET', headers: { "content-type": 'application/json' } });
     const data = await response.json();
     const textAreaEdit = document.getElementById('placeTextArea').innerHTML = `<textarea rows="8" cols="100" disabled  placeholder="Escreva aqui...">${data.description}</textarea><button onclick="reloadWindow()">Fechar relatório</button>`;
     window.location.href = '#top';

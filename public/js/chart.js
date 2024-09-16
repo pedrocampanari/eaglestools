@@ -1,5 +1,6 @@
 var myChart, myChart2;
 
+
 async function drawChartDefault() {
   var canvas = document.getElementById('myChart');
   var ctx = canvas.getContext('2d');
@@ -32,19 +33,23 @@ async function drawChartDefault() {
       return data.length;
     }));
 
+    const colorsRandom = () => {
+      const length = users.map(element => element[0]).length
+      let colors = [];
+      for (let i = 0; i < length; i++) {
+        colors.push(`#${Math.floor(Math.random() * 16777215).toString(16)}`);
+      }
+      return colors;
+    }
+
+    const colors = colorsRandom();
+
     const data = {
       labels: users.map(element => element[0]),
       datasets: [{
         label: 'Atividades concluídas',
-        data: tasks,  
-        backgroundColor: [
-          'rgb(255, 99, 132)',
-          'rgb(54, 162, 235)',
-          'rgb(255, 205, 86)',
-          'rgb(0, 205, 86)',
-          'rgb(0, 0, 86)',
-          'rgb(120, 205, 86)'
-        ],
+        data: tasks,
+        backgroundColor: colors,
         hoverOffset: 1
       }]
     };
@@ -65,24 +70,8 @@ async function drawChartDefault() {
       datasets: [{
         label: 'Atividades concluídas',
         data: tasks,
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(255, 159, 64, 0.2)',
-          'rgba(255, 205, 86, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
-          'rgba(201, 203, 207, 0.2)'
-        ],
-        borderColor: [
-          'rgb(255, 99, 132)',
-          'rgb(255, 159, 64)',
-          'rgb(255, 205, 86)',
-          'rgb(75, 192, 192)',
-          'rgb(54, 162, 235)',
-          'rgb(153, 102, 255)',
-          'rgb(201, 203, 207)'
-        ],
+        backgroundColor: colors,
+        borderColor: ['rgba(100, 100, 100, 0.2)'],
         borderWidth: 1
       }]
     };
@@ -142,19 +131,23 @@ async function drawChartAllDelays() {
       return data.length;
     }));
 
+    const colorsRandom = () => {
+      const length = users.map(element => element[0]).length
+      let colors = [];
+      for (let i = 0; i < length; i++) {
+        colors.push(`#${Math.floor(Math.random() * 16777215).toString(16)}`);
+      }
+      return colors;
+    }
+
+    const colors = colorsRandom();
+
     const data = {
       labels: users.map(element => element[0]),
       datasets: [{
         label: 'Atividades atrasadas',
-        data: tasks,  
-        backgroundColor: [
-          'rgb(255, 99, 132)',
-          'rgb(54, 162, 235)',
-          'rgb(255, 205, 86)',
-          'rgb(0, 205, 86)',
-          'rgb(0, 0, 86)',
-          'rgb(120, 205, 86)'
-        ],
+        data: tasks,
+        backgroundColor: colors,
         hoverOffset: 1
       }]
     };
@@ -174,24 +167,8 @@ async function drawChartAllDelays() {
       datasets: [{
         label: 'Atividades atrasadas',
         data: tasks,
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(255, 159, 64, 0.2)',
-          'rgba(255, 205, 86, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
-          'rgba(201, 203, 207, 0.2)'
-        ],
-        borderColor: [
-          'rgb(255, 99, 132)',
-          'rgb(255, 159, 64)',
-          'rgb(255, 205, 86)',
-          'rgb(75, 192, 192)',
-          'rgb(54, 162, 235)',
-          'rgb(153, 102, 255)',
-          'rgb(201, 203, 207)'
-        ],
+        backgroundColor: colors,
+        borderColor: ['rgba(100, 100, 100, 0.2)'],
         borderWidth: 1
       }]
     };

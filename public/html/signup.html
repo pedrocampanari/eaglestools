@@ -6,9 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eagles Organization</title>
     <link rel="stylesheet" href="../css/style-signup.css">
+    <link rel="stylesheet" href="../css/style-alerts.css">
+
 </head>
 
 <body>
+    <header></header>
     <div class="container">
         <div class="overlay" id="overlay">
             <div class="sign-in" id="sign-in">
@@ -49,8 +52,8 @@
                 </div>
                 <p class="small">ou</p>
                 <form id="sign-in-form">
-                    <input type="text" id="login__username" placeholder="Usuário" />
-                    <input type="password" id="login__password" placeholder="Senha" />
+                    <input required type="text" id="login__username" placeholder="Usuário" />
+                    <input required type="password" id="login__password" placeholder="Senha" />
                     <p class="forgot-password">Esqueceu sua senha?</p>
                     <button class="control-button in logIn">Sign In</button>
                 </form>
@@ -79,14 +82,15 @@
                 </div>
                 <p class="small">ou</p>
                 <form id="sign-up-form">
-                    <input type="text" id="inp-username" placeholder="Nome" />
-                    <input type="text" id="inp-email" placeholder="Nome de usuário" />
-                    <input type="password" id="inp-password" placeholder="Senha" />
+                    <input required type="text" id="inp-username" placeholder="Nome" />
+                    <input required type="text" id="inp-email" placeholder="Nome de usuário" />
+                    <input required type="password" id="inp-password" placeholder="Senha" />
                     <button class="control-button up signUp">Sign Up</button>
                 </form>
             </div>
         </div>
     </div>
+    <script src="../js/alerts.js"></script>
     <script src="../js/signup.js"></script>
     <script src="../js/login.js"></script>
 </body>

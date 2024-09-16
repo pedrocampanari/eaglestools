@@ -34,10 +34,15 @@ function renderCalendar(month, year) {
 
     // Adiciona os dias do mês
     for (let i = 1; i <= lastDay; i++) {
-        const date = new Date(`${year}/${month+1}/${i}`);
+        const date = new Date(`${year}/${month+1}/${i-1}`);
+        const now = new Date();
+        date.setHours(23);
+        date.setMinutes(59);
+        date.setSeconds(59);
+
         const dayElement = document.createElement('div');
 
-        if  (date <= new Date()){
+        if  (date < now){
             dayElement.setAttribute("class",  "dayLated");
         }else{
             dayElement.setAttribute("class",  "dayNormal");
