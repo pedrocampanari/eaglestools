@@ -94,7 +94,7 @@ btnRemoveTask.addEventListener("click", async () => {
     } catch (err) {
         alert(err);
     }
-    window.location.reload();
+    //window.location.reload();
 
 
 });
@@ -164,6 +164,6 @@ btnAddUser.addEventListener("click", async () => {
 
     alert('Novo Usuário Adicionado!');
 
-    window.location.reload();
+    //window.location.reload();
 
 });
