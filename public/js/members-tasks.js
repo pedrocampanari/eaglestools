@@ -9,7 +9,8 @@ const memberInfoRequest = async ()=>{
     .then(data => {
         document.getElementById('username').innerHTML = data.name;
     }).catch((err)=>{
-        drawAlert('error', err);
+        alert('error', err);
+        window.location.reload();
     });
 }
 memberInfoRequest();
@@ -33,7 +34,7 @@ async function queryTasks() {
         if (data.length == 0) {
 
             taskInProgressContainer.innerHTML = `<span class="span-roboto-condensed p-3 text-align-center">Sem tarefas no momento!</span>`
-            drawAlert('error', 'No tasks found');
+            alert('error', 'No tasks found');
             return;
         }
 
@@ -72,7 +73,8 @@ async function queryTasks() {
         `
         });
     } catch (error) {
-        drawAlert('error', 'Error fetching data:' + error);
+        alert('error', 'Error fetching data:' + error);
+        window.location.reload();
     }
 }
 
@@ -92,9 +94,7 @@ async function queryTasksConcluded() {
         console.log(data);
 
         if (data.length == 0) {
-
             taskConcludedContainer.innerHTML = `<span class="span-roboto-condensed p-3 text-align-center">Sem tarefas concluídas!</span>`
-            drawAlert('error', 'No tasks found');
             return;
         }
 
@@ -130,7 +130,8 @@ async function queryTasksConcluded() {
         `
         });
     } catch (error) {
-        drawAlert('error', 'Error fetching data:' + error);
+        alert('error', 'Error fetching data:' + error);
+        window.location.reload();
     }
 }
 
@@ -215,7 +216,8 @@ function btnEnable(element) {
         });
 
         //window.location.reload();
-        drawAlert('success', 'Nova tarefa adicionada!');
+        alert('success', 'Nova tarefa adicionada!');
+        window.location.reload();
 
     });
 }
@@ -240,9 +242,11 @@ async function sendTask(element) {
         const response = await fetch('/api/task/concluded/' + idTask, options);
         const data = response.json();
         console.log(data);
-        drawAlert('success', 'Tarefa enviada com sucesso!');
+        alert('success', 'Tarefa enviada com sucesso!');
+        window.location.reload();
     } catch (err) {
-        drawAlert('error', err);
+        alert('error', err);
+        window.location.reload();
     }
 
 }

@@ -31,7 +31,8 @@ btnSignIn.addEventListener("click", async () => {
     if (responseData.status == 200){
        window.location.href = responseData.redirectUrl;
     }else{
-        drawAlert('error', responseData.message);
+        alert('error', responseData.message);
+        window.location.reload();
     }
 });
 
@@ -57,12 +58,14 @@ btnSignUp.addEventListener("click", async () => {
         };
     
         const response = await fetch('/api/user/add/', options);
-        const data = await response.json();
-        console.log(data);
+        const data = new Promise.all(await response.json());
+        console.log(data.message);
     
-        drawAlert('success', 'Novo Usuário Adicionado! Faça o login');
+        alert(data);
+        window.location.reload();
     }else{
-        drawAlert('error', 'Preencha todos os campos');
+        alert('error', 'Preencha todos os campos');
+        window.location.reload();
     }
 
     
