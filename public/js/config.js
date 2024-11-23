@@ -94,7 +94,7 @@ btnRemoveTask.addEventListener("click", async () => {
     } catch (err) {
         alert(err);
     }
-    //window.location.reload();
+    //  window.location.reload();
 
 
 });

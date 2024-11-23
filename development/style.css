@@ -5,6 +5,38 @@ header{
     background-color: #F4F4F4;
 }
 
+
+.text-no-content{
+    padding: 8rem 0 8rem 0;
+}
+
+textarea {
+    border: none;
+    padding: 30px;
+
+}
+
+textarea::placeholder{
+    text-align: center;
+    line-height: 12rem;
+    font-size: 22px;
+    font-style: italic;
+}
+
+.dinamic-box{
+    border: 1px solid #C0C0C0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#dinamic-items-next{
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+}
+
 .roboto-condensed{
     font-family: "Roboto Condensed", sans-serif;
     font-optical-sizing: auto;
@@ -20,6 +52,8 @@ header{
     font-weight: 400;
     font-style: normal;
 }
+
+
 .general-box{
     display: flex;
     flex-wrap: wrap-reverse;
@@ -39,37 +73,6 @@ header{
     max-width: 100rem;
 }
 
-.dinamic-box{
-    border: 1px solid #C0C0C0;
-
-}
-
-.box{
-    border: 1px solid #C0C0C0;
-    height: auto;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-}
-
-.box > button{
-    width: 100%;
-    height: 3rem;
-    border: none;
-    color: #F4F4F4;
-    font-family: 'Roboto Condensed', Arial, sans-serif;
-    background-color: #00b6bd;
-}
-.box > button:hover{
-    width: 100%;
-    font-weight: bold;
-    background-color: #00e3eb;
-}
-
-.text-no-content{
-    padding: 8rem 0 8rem 0;
-}
 
 .task-buttons-box{
     display: flex;
@@ -114,7 +117,6 @@ header{
     margin: 0;
 }
 
-
 .span-date{
     font-weight: 400;
 }
@@ -129,7 +131,6 @@ header{
 .span-status-concluded {
     color: #00ddec;
 }
-
 
 
 
@@ -272,6 +273,46 @@ header{
     background-color: #00ff5594;
     color: #ffffff;
     font-weight: bold
+}
+
+.box{
+    border: 1px solid #C0C0C0;
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.box > button{
+    width: 100%;
+    height: 3rem;
+    border: none;
+    color: #F4F4F4;
+    font-family: 'Roboto Condensed', Arial, sans-serif;
+    background-color: #00b6bd;
+}
+.box > button:hover{
+    width: 100%;
+    font-weight: bold;
+    background-color: #00e3eb;
+}
+
+.text-no-content{
+    padding: 8rem 0 8rem 0;
+}
+
+textarea {
+    border: none;
+    padding: 30px;
+
+}
+
+textarea::placeholder{
+    text-align: center;
+    line-height: 12rem;
+    font-size: 22;
+    font-style: italic;
 }
 
 footer{

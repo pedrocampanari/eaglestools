@@ -1,12 +1,15 @@
-const taskInProgressContainer = document.getElementById('dinamic-items-next');
+const taskInProgressContainer = document.getElementById('carousel-inner');
 const url = new URL(window.location.href);
 var memberId = url.pathname.split('/').pop();
+let userInfo;
 
 
 const memberInfoRequest = async ()=>{
     await fetch(`/api/userInfo/${memberId}`)
     .then(response => response.json())
     .then(data => {
+        userInfo = data;
+        console.log(userInfo);
         document.getElementById('username').innerHTML = data.name;
     }).catch((err)=>{
         alert('error', err);
@@ -41,35 +44,25 @@ async function queryTasks() {
 
         data.forEach(element => {
             taskInProgressContainer.innerHTML += `
-                <div class="row task">
-                    <div class="col-10 pt-2">
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col p-0">
-                                    <h4 class="info-task">${element.name} - Resp. ${element.ownerName}</h4>
-                                </div>
-                            </div>
-                        <div class="row">
-                            <div class="col p-0">
-                                <h4 class="info-task">Prazo: <span class="span-date">${(new Date(element.term).getDate()) < 10 ? "0" + (new Date(element.term).getDate()) : (new Date(element.term).getDate())}/${(new Date(element.term).getMonth() + 1) < 10 ? "0" + (new Date(element.term).getMonth() + 1) : (new Date(element.term).getMonth() + 1)}/${new Date(element.term).getFullYear()} - ${new Date(element.term).getHours()}:${new Date(element.term).getMinutes() > 10? new Date(element.term).getMinutes(): '0' + new Date(element.term).getMinutes()}</span></h4>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col p-0">
-                                <h4 class="info-task">Status: <span class="span-status-${new Date(element.term) >= new Date() ? 'pendente' : 'atrasado'}">${new Date(element.term) >= new Date() ? 'Pendente' : 'Atrasado'}</span></h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-2 task-buttons-box p-1">
-                    <button onclick="editDraft(this)" value="${element._id}">
-                        <img src="../assets/img/icon/draft.svg">
-                    </button>
-                    <button onclick="sendTask(this)" value="${element._id}">
-                        <img src="../assets/img/icon/done.svg">
-                    </button>
-                </div>
-            </div>
+                <div class="carousel-item">
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col-9">
+                                                        <h4 class="info-task">${element.name} - Resp. ${element.ownerName}</h4>
+                                                        <h4 class="info-task">Prazo: <span class="span-date">${(new Date(element.term).getDate()) < 10 ? "0" + (new Date(element.term).getDate()) : (new Date(element.term).getDate())}/${(new Date(element.term).getMonth() + 1) < 10 ? "0" + (new Date(element.term).getMonth() + 1) : (new Date(element.term).getMonth() + 1)}/${new Date(element.term).getFullYear()} - ${new Date(element.term).getHours()}:${new Date(element.term).getMinutes() > 10? new Date(element.term).getMinutes(): '0' + new Date(element.term).getMinutes()}</span></h4>
+                                                        <h4 class="info-task">Status: <span class="span-status-${new Date(element.term) >= new Date() ? 'pendente' : 'atrasado'}">${new Date(element.term) >= new Date() ? 'Pendente' : 'Atrasado'}</span></h4>
+                                                    </div>
+                                                    <div class="col-1 task-buttons-box">
+                                                        <button onclick="editDraft(this)" value="${element._id}">
+                                                            <img src="../assets/img/icon/draft.svg">
+                                                        </button>
+                                                        <button onclick="sendTask(this)" value="${element._id}">
+                                                            <img src="../assets/img/icon/done.svg">
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
         `
         });
     } catch (error) {
@@ -167,6 +160,15 @@ function drawCreateNewTaskDinamic(element, date) {
     <section class="addNewTask">
         <h5>Adicionar nova tarefa</h5>
         <div>
+            <div style="width: 100%">Resp: ${userInfo.name} + 
+                <select>
+                    <option>ninguém</option>
+                    <option>Sophi</option>
+                    <option></option>
+                    <option></option>
+
+                </select>
+            </div>
             <label for="inp-name-task">Nome: </label>
             <input class="inputs-add" type="text" name="nameTask" id="inp-name-task">
             <label for="inp-term">Prazo: </label>
@@ -255,7 +257,7 @@ async function sendTask(element) {
 function editDraft(element) {
     const idTask = element.value;
     const textAreaEdit = document.getElementById('placeTextArea').innerHTML = `<textarea rows="8" cols="100"  placeholder="Escreva aqui..."></textarea><button value="${idTask}" onclick="sendTask(this)">Enviar relatório</button>`;
-    window.location.href = '#top';
+    window.location.href = '#focusONtext';
 }
 
 

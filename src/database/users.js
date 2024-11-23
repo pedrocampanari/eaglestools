@@ -6,9 +6,10 @@ const schemas = require('../database/schemas');
 
 router.post('/api/user/add/', async (req, res) => {
     try {
-
-        const newUser = new schemas.User(req.body);
-        await newUser.save();
+        const user = new schemas.User(req.body);
+        await user.save();
+        res.json(user);
+        
         console.log('Criado')
         res.status(201).json({ message: 'User created successfully' });
 
