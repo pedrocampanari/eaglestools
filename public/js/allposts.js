@@ -29,6 +29,7 @@ const seePost = (element) =>{
     const post = document.getElementsByClassName('poster')[element];
     post.style.transition = '1s';
     post.style.paddingBottom = "20px";
+    post.style.height = 'auto';
     post.style.overflow = 'visible';
 
 }
