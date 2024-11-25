@@ -27,6 +27,8 @@ const showAllPosts = async () => {
 
 const seePost = (element) =>{
     const post = document.getElementsByClassName('poster')[element];
+
+    document.getElementsByClassName('card')[element].style.height = "auto"
     post.style.transition = '1s';
     post.style.paddingBottom = "20px";
     post.style.height = 'auto';
