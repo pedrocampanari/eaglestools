@@ -314,3 +314,23 @@ footer{
     color: #ffffff;
     transition: 0.3s;
 }
+
+#link_comments{
+    padding: 15px;
+    border-radius: 100%;
+    position: fixed;
+    bottom: 5%;
+    left: 93%;
+    background-color:#00b1b8;
+    border: 7px solid #00e3eb;
+}
+
+#link_comments > img {
+    width: 3rem;
+}
+#link_comments:hover{
+    transition: 0.3s;
+    border: 7px solid #009ba0;
+    background-color: #00e3eb;
+
+}

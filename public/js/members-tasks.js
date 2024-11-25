@@ -10,6 +10,7 @@ const memberInfoRequest = async ()=>{
     .then(data => {
         userInfo = data;
         console.log(userInfo);
+        document.getElementById('comments').innerHTML = `<a id="link_comments" href="/allposts?id=${memberId}&name=${data.name}"><img src="../assets/img/icon/people.png" alt="Comentários" srcset=""></a>`
         document.getElementById('username').innerHTML = data.name;
     }).catch((err)=>{
         alert('error', err);
