@@ -71,6 +71,10 @@ app.get('/safetyZone/config/root/js/', (req, res) => {
     res.sendFile(__dirname + '/public/js/config.js');
 });
 
+app.get('/allposts/', (req, res) => {
+    res.sendFile(__dirname + '/public/html/allposts.html');
+})
+
 setInterval(async () => {
     try {
         const tasks = await schemas.Task.find({ concluded: false });

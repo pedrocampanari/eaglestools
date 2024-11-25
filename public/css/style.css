@@ -277,6 +277,7 @@ header{
 footer{
     background-color: #009ca1;
     height: 10rem;
+    width: 100%;
 }
 
 .redHover:hover{
