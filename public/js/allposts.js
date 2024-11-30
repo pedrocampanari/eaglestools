@@ -16,7 +16,7 @@ const showAllPosts = async () => {
             console.log(post)
             return `<div class="post card p-3">
                         <h4 style="font-size: 1.2rem" class="span-roboto-condensed"><span ><img width="30px" src="../assets/img/icon/person.png"/></span> - <i>${post.ownerName}</i> <button class="seeTask" type="button" onclick="seePost(${i})"class="btn">Ver</button></h4>
-                        <p class="poster closeposter">${post.description}
+                        <p class="poster closeposter"><span class="postname" hidden><b>Título: <i>${post.name}</i></b></span>${post.description}
                         </p>
                     </div>`});
         containerShowAll.innerHTML = posts.join('');
@@ -32,6 +32,8 @@ const closePost = (element) => {
     post.setAttribute("class", "poster closeposter");
 
     const button = document.getElementsByClassName('seeTask')[element];
+    const postname = document.getElementsByClassName('postname')[element];
+    postname.setAttribute("hidden", "");
     button.innerHTML = `Ver`
     button.setAttribute("onclick", `seePost(${element})`);
 }
@@ -44,7 +46,9 @@ const seePost = (element) =>{
     post.setAttribute("class", "poster");
 
     const button = document.getElementsByClassName('seeTask')[element];
-    button.innerHTML = `Fechar`
+    const postname = document.getElementsByClassName('postname')[element];
+    postname.removeAttribute("hidden");
+    button.innerHTML = `Fechar`;
     button.setAttribute("onclick", `closePost(${element})`);
 
 }
