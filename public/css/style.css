@@ -24,18 +24,18 @@ header{
     display: flex;
     flex-wrap: wrap-reverse;
     justify-content: center;
-    column-gap: 20px;
+    column-gap: 10px;
     row-gap: 20px;
     padding: 2rem 0 7rem 0;
 }
 
 .general-box > .item:nth-child(1){
     min-width: 25rem;
-    width: 62rem;
+    width: 40rem;
 }
 .general-box > .item:nth-child(2){
     min-width: 25rem;
-    width: 31rem;
+    width: 30rem;
     max-width: 100rem;
 }
 
@@ -320,7 +320,7 @@ footer{
     border-radius: 100%;
     position: fixed;
     bottom: 5%;
-    left: 93%;
+    left: 87%;
     background-color:#00b1b8;
     border: 7px solid #00e3eb;
 }
@@ -333,4 +333,11 @@ footer{
     border: 7px solid #009ba0;
     background-color: #00e3eb;
 
+}
+
+.closeposter {
+    display: -webkit-box; 
+    -webkit-line-clamp: 4; 
+    overflow: hidden; 
+    -webkit-box-orient: vertical;
 }

@@ -16,7 +16,7 @@ const showAllPosts = async () => {
             console.log(post)
             return `<div class="post card p-3">
                         <h4 style="font-size: 1.2rem" class="span-roboto-condensed"><span ><img width="30px" src="../assets/img/icon/person.png"/></span> - <i>${post.ownerName}</i> <button class="seeTask" type="button" onclick="seePost(${i})"class="btn">Ver</button></h4>
-                        <p style="display: -webkit-box; -webkit-line-clamp: 4; overflow: hidden; -webkit-box-orient: vertical; " class="poster">${post.description}
+                        <p class="poster closeposter">${post.description}
                         </p>
                     </div>`});
         containerShowAll.innerHTML = posts.join('');
@@ -25,14 +25,27 @@ const showAllPosts = async () => {
     }
 }
 
+const closePost = (element) => {
+    const post = document.getElementsByClassName('poster')[element];
+
+    document.getElementsByClassName('card')[element].style.height = "auto"
+    post.setAttribute("class", "poster closeposter");
+
+    const button = document.getElementsByClassName('seeTask')[element];
+    button.innerHTML = `Ver`
+    button.setAttribute("onclick", `seePost(${element})`);
+}
+
+
 const seePost = (element) =>{
     const post = document.getElementsByClassName('poster')[element];
 
     document.getElementsByClassName('card')[element].style.height = "auto"
-    post.style.transition = '1s';
-    post.style.paddingBottom = "20px";
-    post.style.height = 'auto';
-    post.style.overflow = 'visible';
+    post.setAttribute("class", "poster");
+
+    const button = document.getElementsByClassName('seeTask')[element];
+    button.innerHTML = `Fechar`
+    button.setAttribute("onclick", `closePost(${element})`);
 
 }
 

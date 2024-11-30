@@ -161,14 +161,7 @@ function drawCreateNewTaskDinamic(element, date) {
     <section class="addNewTask">
         <h5>Adicionar nova tarefa</h5>
         <div>
-            <div style="width: 100%">Resp: ${userInfo.name} + 
-                <select>
-                    <option>ninguém</option>
-                    <option>Sophi</option>
-                    <option></option>
-                    <option></option>
-
-                </select>
+            <div style="width: 100%">Resp: ${userInfo.name}
             </div>
             <label for="inp-name-task">Nome: </label>
             <input class="inputs-add" type="text" name="nameTask" id="inp-name-task">
