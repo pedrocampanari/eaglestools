@@ -32,6 +32,20 @@ router.get('/api/userInfo/:id', async (req, res) => {
     }
 });
 
+
+router.get('/api/usersDataList', async (req, res) => {
+    try {
+        const users = await schemas.User.find({root: false});
+        const dataName = users.map((element)=> {
+            return element.email
+        });
+        console.log(dataName)
+        res.status(200).json(dataName);
+    } catch (err) {
+        res.status(500).json({ message: 'Error fetching users' });
+    }
+});
+
 router.get('/api/user/getUsers/', async (req, res) => {
     try {
         const users = await schemas.User.find();

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input com Sugestões</title>
+    <style>
+        .input-container {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            border: 1px solid #ccc;
+            padding: 5px;
+            border-radius: 5px;
+            min-height: 40px;
+            width: 400px;
+            position: relative; /* Para posicionar o dropdown */
+        }
+
+        .chip {
+            display: flex;
+            align-items: center;
+            background-color: #e1ecf4;
+            color: #0078d4;
+            padding: 5px 10px;
+            border-radius: 15px;
+            margin: 2px;
+            font-size: 14px;
+        }
+
+        .chip .remove {
+            margin-left: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .chip .remove:hover {
+            color: red;
+        }
+
+        .input-container input {
+            border: none;
+            outline: none;
+            font-size: 14px;
+            padding: 5px;
+            flex-grow: 1;
+            min-width: 100px;
+        }
+
+        .suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: white;
+            border: 1px solid #ccc;
+            max-height: 150px;
+            overflow-y: auto;
+            display: none;
+            z-index: 10;
+        }
+
+        .suggestion-item {
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .suggestion-item:hover {
+            background-color: #0078d4;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="input-container" id="recipientInput">
+        <input type="text" id="inputField" placeholder="Digite um email">
+        <div class="suggestions" id="suggestionsBox"></div>
+    </div>
+
+    <script>
+        const contacts = [
+            "alice@example.com",
+            "bob@example.com",
+            "charlie@example.com",
+            "david@example.com",
+            "emily@example.com"
+        ];
+
+        const inputField = document.getElementById("inputField");
+        const inputContainer = document.getElementById("recipientInput");
+        const suggestionsBox = document.getElementById("suggestionsBox");
+
+        inputField.addEventListener("input", function() {
+            const query = inputField.value.toLowerCase();
+            suggestionsBox.innerHTML = ""; // Limpa sugestões anteriores
+
+            if (query) {
+                const filteredContacts = contacts.filter(email => email.includes(query));
+
+                if (filteredContacts.length) {
+                    suggestionsBox.style.display = "block";
+
+                    filteredContacts.forEach(email => {
+                        const suggestionItem = document.createElement("div");
+                        suggestionItem.classList.add("suggestion-item");
+                        suggestionItem.textContent = email;
+
+                        suggestionItem.addEventListener("click", function() {
+                            createChip(email);
+                            inputField.value = "";
+                            suggestionsBox.style.display = "none";
+                        });
+
+                        suggestionsBox.appendChild(suggestionItem);
+                    });
+                } else {
+                    suggestionsBox.style.display = "none";
+                }
+            } else {
+                suggestionsBox.style.display = "none";
+            }
+        });
+
+        inputField.addEventListener("keydown", function(event) {
+            if (event.key === "Enter" || event.key === ",") {
+                event.preventDefault();
+
+                let email = inputField.value.trim();
+                if (email) {
+                    createChip(email);
+                    inputField.value = "";
+                    suggestionsBox.style.display = "none";
+                }
+            }
+        });
+
+        function createChip(text) {
+            const chip = document.createElement("div");
+            chip.classList.add("chip");
+            chip.textContent = text;
+
+            const removeBtn = document.createElement("span");
+            removeBtn.classList.add("remove");
+            removeBtn.textContent = "×";
+
+            removeBtn.addEventListener("click", function() {
+                chip.remove();
+            });
+
+            chip.appendChild(removeBtn);
+            inputContainer.insertBefore(chip, inputField);
+        }
+
+        document.addEventListener("click", function(event) {
+            if (!inputContainer.contains(event.target)) {
+                suggestionsBox.style.display = "none";
+            }
+        });
+    </script>
+
+</body>
+</html>

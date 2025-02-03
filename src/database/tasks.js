@@ -49,9 +49,9 @@ router.post('/api/task/concluded/:id', async (req, res) => {
     }
 });
 
-router.get('/api/tasks/getAll/', async (req, res) => {
+router.get('/api/tasks/getAll/:id', async (req, res) => {
     try {
-        const tasks = await schemas.Task.find();
+        const tasks = await schemas.Task.find({user: req.params.id});
         res.json(tasks);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -61,14 +61,35 @@ router.get('/api/tasks/getAll/', async (req, res) => {
 router.post('/api/task/addTask/', async (req, res) => {
     try {
         const newTask = new schemas.Task(req.body);
-        const ownerNameQuery = await schemas.User.findById(req.body.ownerName);
+
+        // Busca o proprietário pelo nome (ou mude para _id se necessário)
+        const ownerNameQuery = await schemas.User.findOne({ name: req.body.ownerName });
+        if (!ownerNameQuery) {
+            return res.status(400).json({ message: "Proprietário não encontrado" });
+        }
         newTask.ownerName = ownerNameQuery.name;
+
+        // Resolve todas as Promises de busca de usuários
+        const users = await Promise.all(
+            (req.body.user || []).map(async (element) => { // Garante que req.body.user existe
+                const user = await schemas.User.findOne({ email: element });
+                return user ? user._id : null; // Retorna null se não encontrar
+            })
+        );
+
+        // Remove usuários não encontrados (null)
+        newTask.user = users.filter(userId => userId !== null);
+
+        console.log(newTask);
         await newTask.save();
-        res.json(newTask);
+        res.status(201).json(newTask); // Retorna status 201 (Created)
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        console.error("Erro ao salvar tarefa:", error);
+        res.status(500).json({ message: "Erro interno do servidor" });
     }
 });
+
+
 router.get('/api/task/dailyTasks', async (req, res) => {
     const today = new Date();
     today.setHours(23, 59, 59, 0);

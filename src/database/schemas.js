@@ -5,9 +5,9 @@ const userSchema = new mongoose.Schema({
     email: String,
     password: String,
     root: Boolean,
-    tasks: [{ 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Task' 
+    tasks: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Task'
     }]
 });
 
@@ -15,10 +15,10 @@ const taskSchema = new mongoose.Schema({
     name: String,
     ownerName: String,
     description: String,
-    user: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'User' 
-    },
+    user: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }],
     status: Boolean,
     term: Date,
     urgency: Number,

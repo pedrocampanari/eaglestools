@@ -19,7 +19,7 @@
                 </div>
                 <div class="col">
                     <div class="user-box-item  d-flex justify-content-end pt-3">
-                        <h3 class="user-box-link">Olá, <span id="username">Pedro</span>!</h3>
+                        <h3 class="user-box-link">Olá, <span id="username"></span>!</h3>
                     </div>
                 </div>
             </div>
@@ -28,8 +28,6 @@
     <main>
 
         <section class="d-flex general-box">
-
-
             <div class="item" id="focusONtext">
                 <div class="container-fluid">
                     <div class="row">
@@ -49,12 +47,25 @@
                     </div>
                     <div class="row pt-3">
                         <div class="col">
-                            <h3 class="roboto-condensed">Histórico de tarefas</h3>
+                            <h3 class="roboto-condensed">Últimos commits</h3>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col">
-                            <div class="box pt-2" id="historic"></div>
+                            <div class="commits-box">
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row pt-3">
+                        <div class="col">
+                            <h3 class="roboto-condensed">Histórico de tarefas<span class="spn-number-of-elements spn-historic">0</span></h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="box pt-2" id="historic">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -87,7 +98,7 @@
                     </div>
                     <div class="row pt-3">
                         <div class="col">
-                            <h3 class="roboto-condensed">Próximas tarefas em andamento</h3>
+                            <h3 class="roboto-condensed">Próximas tarefas em andamento <span class="spn-number-of-elements spn-tasks-in-progress">0</span></h3>
                         </div>
                     </div>
                     <div class="row">
@@ -114,13 +125,32 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row pt-3">
+                        <div class="col">
+                            <h3 class="roboto-condensed">Dropzone para versionamento de código</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                       <div class="col">
+                            <div id="dropzone">
+                                <p>Arraste o arquivo ou clique para adicionar</p>
+                                <input type="file" id="fileInput">
+                            </div>
+                            <div class="dropzone-commit-box mt-2">
+                              
+                                <h6>Alterações:
+                                    <ul id="fileList"></ul>
+                                </h6>
+                                <textarea name="" id="message-commit" cols="50" rows="2" placeholder="descreva todas alterações..."></textarea>
+                                <button id="btn-commit">Commit</button>
+                            </div>
+                       </div> 
+                    </div>
                 </div>
             </div>
         </section>
+
         <div id="comments"></div>
-
-
-
     </main>
     <footer>
     </footer>
@@ -135,7 +165,8 @@
         integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
         crossorigin="anonymous"></script>
     <script src="../js/calendar.js"></script>
-    <script src="../js/members-tasks.js"></script>
+    <script src="../js/dialog-box.js"></script>
+    <script src="../js/members-dashboard.js"></script>
 </body>
 
 </html>

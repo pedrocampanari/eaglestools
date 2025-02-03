@@ -7,12 +7,8 @@ let currentMonth = new Date().getMonth();
 function renderCalendar(month, year) {
     const firstDay = new Date(year, month, 1).getDay();
     const lastDay = new Date(year, month + 1, 0).getDate();
-    const t = new Date().getDate();
-    const m = new Date().getMonth() + 1;
-    const y = new Date().getFullYear();
-
-    console.log(t, m, y);
-
+    const today = new Date();
+    
     // Nomes dos meses em português
     const monthNames = [
         'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
@@ -22,33 +18,31 @@ function renderCalendar(month, year) {
     monthYear.textContent = `${monthNames[month]} de ${year}`;
     calendarDays.innerHTML = '';
 
-    // Ajustando o primeiro dia da semana
+    // Ajustando o primeiro dia da semana (para alinhar corretamente)
     const offset = firstDay === 0 ? 6 : firstDay - 1;
 
-    // Adiciona espaços vazios para os dias anteriores ao primeiro do mês
+    // Adiciona espaços vazios antes do primeiro dia do mês
     for (let i = 0; i < offset; i++) {
         const emptyCell = document.createElement('div');
+        emptyCell.classList.add('empty-cell');
         calendarDays.appendChild(emptyCell);
     }
-    
 
     // Adiciona os dias do mês
     for (let i = 1; i <= lastDay; i++) {
-        const date = new Date(`${year}/${month+1}/${i-1}`);
-        const now = new Date();
-        date.setHours(23);
-        date.setMinutes(59);
-        date.setSeconds(59);
-
+        const date = new Date(year, month, i);
+        date.setHours(23, 59, 59, 999); // Garante que a comparação seja feita no final do dia
+        
         const dayElement = document.createElement('div');
-
-        if  (date < now){
-            dayElement.setAttribute("class",  "dayLated");
-        }else{
-            dayElement.setAttribute("class",  "dayNormal");
-        }
         dayElement.textContent = i;
-        dayElement.setAttribute("onclick", `drawCreateNewTaskDinamic(this, "${date}")`);
+
+        if (date.getTime() < today.getTime()) {
+            dayElement.classList.add("dayLated");
+        } else {
+            dayElement.classList.add("dayNormal");
+            dayElement.setAttribute("data-value", date.toISOString()); // Armazena a data no elemento
+        }
+
         calendarDays.appendChild(dayElement);
     }
 }
@@ -70,8 +64,27 @@ function navigateMonth(direction) {
     renderCalendar(currentMonth, currentYear);
 }
 
-document.getElementById('prevMonth').addEventListener('click', () => navigateMonth('prev'));
-document.getElementById('nextMonth').addEventListener('click', () => navigateMonth('next'));
+function enableBtnsCalendar() {
+    const prevBtn = document.getElementById('prevMonth');
+    const nextBtn = document.getElementById('nextMonth');
 
-// Renderiza o calendário atual ao carregar a página
+    // Verifica se os event listeners já foram adicionados
+    if (!prevBtn.dataset.listenerAdded) {
+        prevBtn.addEventListener('click', () => {
+            navigateMonth('prev');
+            document.dispatchEvent(new Event('reloadEnableBtns'));
+        });
+        prevBtn.dataset.listenerAdded = "true"; // Marca que o evento já foi adicionado
+    }
+
+    if (!nextBtn.dataset.listenerAdded) {
+        nextBtn.addEventListener('click', () => {
+            navigateMonth('next');
+            document.dispatchEvent(new Event('reloadEnableBtns'));
+        });
+        nextBtn.dataset.listenerAdded = "true"; // Marca que o evento já foi adicionado
+    }
+}
+// Renderiza o calendário ao carregar a página
 renderCalendar(currentMonth, currentYear);
+enableBtnsCalendar();
