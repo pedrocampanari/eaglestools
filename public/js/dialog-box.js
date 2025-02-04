@@ -10,38 +10,48 @@ class Dialog {
     }
 
     async save() {
-        const colectedData = {
-            name: document.getElementById('inp-name-task').value,
-            user: Array.from(document.querySelectorAll('.chip')).map(element => element.textContent),
-            ownerName: document.getElementById('username').textContent,
-            description: '',
-            status: true,
-            term: document.getElementById('inp-term').value,
-            urgency: document.getElementById('task-urgency').value,
-            concluded: false,
-            completionDate: null
-        }
-        
-        try {
-            const response = await fetch('/api/task/addTask/', {
-                method: 'POST',
-                body: JSON.stringify(colectedData),
-                headers: {
-                    'Content-Type': 'application/json'
+        const emailsList = Array.from(document.querySelectorAll('.chip')).map(element => (element.textContent).slice(0, -1));
+        const name = document.getElementById('inp-name-task').value;
+        const termValue = document.getElementById('inp-term').value;
+        const urgency = document.getElementById('task-urgency').value;
+
+        if (!name || emailsList.length === 0 || !termValue || !urgency) {
+            alert('Por favor, preencha todos os campos obrigatórios.');
+        } else {
+            const colectedData = {
+                name: name,
+                user: emailsList,
+                ownerName: document.getElementById('username').textContent,
+                description: '',
+                status: false,
+                term: new Date(termValue),
+                urgency: urgency,
+                concluded: false,
+                completionDate: null
+            };
+
+            try {
+                const response = await fetch('/api/task/addTask/', {
+                    method: 'POST',
+                    body: JSON.stringify(colectedData),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                if (data.status == 200) {
+                    alert('Tarefa criada!');
+                    this.disableDialog();
+                } else {
+                    alert('ERRO!', data.message)
                 }
-            });
-            const data = await response.json();
-            if(data.status == 200){
-                this.disableDialog();
-            }else { 
-                alert('ERRO!', data.message)
+            } catch (err) {
+                alert(err);
             }
-        } catch (err) {
-            alert(err);
         }
     }
 
-    async getDatalistUsers () {
+    async getDatalistUsers() {
         const response = await fetch('/api/usersDataList');
         const data = await response.json();
         return data;
@@ -56,7 +66,8 @@ class Dialog {
         this.mainTag[0].classList.remove("blocked");
     }
 
-    createDialog() {
+    createDialog(i) {
+        const formattedDate = new Date(i).toISOString().slice(0, 16);
         this.body.innerHTML += `
         <section class="dialogBox">
             <div class="container">
@@ -89,7 +100,7 @@ class Dialog {
                                         <input pattern="[PR]" maxlength="1" class="inputs-add" type="text" name="nameTask" id="inp-category-task" placeholder="P ou R">
                                     </div>  
                                 </div>
-                                <input class="inputs-add" type="datetime-local" name="date" id="inp-term" value="${"f"}T00:00" min="${"f"}T00:00" max="${"f"}T23:59">
+                                <input class="inputs-add" type="datetime-local" name="date" id="inp-term" value="${formattedDate}" mformattedDaten="${formattedDate}" max="${formattedDate}">
                                 <label for="task-urgency">Urgência:</label>
                                 <input class="task-urgency" value="0" type="range" min="0" max="5" id="task-urgency" style="width: 20%">
                                 
@@ -110,14 +121,14 @@ class Dialog {
         `
     }
 
-    async inputAutoComplete () {
-        
+    async inputAutoComplete() {
+
         const contacts = await this.getDatalistUsers();
         const inputField = document.getElementById("inputField");
         const inputContainer = document.getElementById("recipientInput");
         const suggestionsBox = document.getElementById("suggestionsBox");
 
-        inputField.addEventListener("input", function() {
+        inputField.addEventListener("input", function () {
             const query = inputField.value.toLowerCase();
             suggestionsBox.innerHTML = ""; // Limpa sugestões anteriores
 
@@ -132,7 +143,7 @@ class Dialog {
                         suggestionItem.classList.add("suggestion-item");
                         suggestionItem.textContent = email;
 
-                        suggestionItem.addEventListener("click", function() {
+                        suggestionItem.addEventListener("click", function () {
                             createChip(email);
                             inputField.value = "";
                             suggestionsBox.style.display = "none";
@@ -148,7 +159,7 @@ class Dialog {
             }
         });
 
-        inputField.addEventListener("keydown", function(event) {
+        inputField.addEventListener("keydown", function (event) {
             if (event.key === "Enter" || event.key === ",") {
                 event.preventDefault();
 
@@ -171,7 +182,7 @@ class Dialog {
             removeBtn.classList.add("remove");
             removeBtn.textContent = "×";
 
-            removeBtn.addEventListener("click", function() {
+            removeBtn.addEventListener("click", function () {
                 chip.remove();
             });
 
@@ -179,7 +190,7 @@ class Dialog {
             inputContainer.insertBefore(chip, inputField);
         }
 
-        document.addEventListener("click", function(event) {
+        document.addEventListener("click", function (event) {
             if (!inputContainer.contains(event.target)) {
                 suggestionsBox.style.display = "none";
             }
@@ -214,7 +225,7 @@ class Dialog {
             const value = e.target.value.toUpperCase();
             document.getElementById("inp-category-task").value = value;
             if (!["P", "R"].includes(value)) {
-              e.target.value = ""; 
+                e.target.value = "";
             }
         });
         this.btnSaveDialog[0].addEventListener("click", async () => {
@@ -224,7 +235,7 @@ class Dialog {
     }
 
     type(i) {
-        this.createDialog();
+        this.createDialog(i);
         this.enableDialog();
         dialog.inputAutoComplete();
         console.log(i);

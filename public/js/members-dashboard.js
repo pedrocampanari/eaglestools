@@ -9,13 +9,33 @@ class MemberConfig {
         this.#initializeClassNamesAndIDs();
     }
 
+    #initializeClassNamesAndIDs() {
+        this.#classNamesAndIDs = {
+            tasksInProgress: document.getElementById('carousel-inner'),
+            tasksConcluded: document.getElementById('historic'),
+            btnAddTask: document.getElementById('taskAddButton'),
+            textArea: document.getElementById('placeTextArea'),
+            commitsBox: document.getElementsByClassName('commits-box')[0],
+            dropzoneCommitBox: document.getElementsByClassName('dropzone-commit-box')[0]
+        };
+        this.#controlSpans = {
+            taskInProgressSpan: document.getElementsByClassName('spn-tasks-in-progress')[0],
+            taskConcludedSpan: document.getElementsByClassName('spn-historic')[0],
+            userInfo: document.getElementById('username'),
+            dropzoneCommitBox: document.getElementsByClassName('control-span-close-commit-changes')[0]
+        }
+
+    }
+
     async storageInfoUser() {
         try {
             const userInfoResponse = await fetch(`/api/userInfo/${this.member}`);
             this.#userInfo = await userInfoResponse.json();
+            console.log(this.#userInfo);
 
             const tasksResponse = await fetch(`/api/tasks/getAll/${this.member}`);
             this.tasks = await tasksResponse.json();
+            console.log(this.tasks);
         } catch (err) {
             console.error("Error fetching data:", err);
         }
@@ -66,29 +86,13 @@ class MemberConfig {
         alert(commit.message);
 
         this.#classNamesAndIDs.dropzoneCommitBox.style.display = 'none';
-
-    }
-
-    #initializeClassNamesAndIDs() {
-        this.#classNamesAndIDs = {
-            tasksInProgress: document.getElementById('carousel-inner'),
-            tasksConcluded: document.getElementById('historic'),
-            btnAddTask: document.getElementById('taskAddButton'),
-            textArea: document.getElementById('placeTextArea'),
-            commitsBox: document.getElementsByClassName('commits-box')[0],
-            dropzoneCommitBox: document.getElementsByClassName('dropzone-commit-box')[0]
-        };
-        this.#controlSpans = {
-            taskInProgressSpan: document.getElementsByClassName('spn-tasks-in-progress')[0],
-            taskConcludedSpan: document.getElementsByClassName('spn-historic')[0],
-            userInfo: document.getElementById('username'),
-            dropzoneCommitBox: document.getElementsByClassName('control-span-close-commit-changes')[0]
-        }
+        await this.renderLastCommits();
 
     }
 
     renderUserInfo() {
         this.#controlSpans.userInfo.innerHTML = this.#userInfo.name;
+        document.getElementById('comments').innerHTML = `<a id="link_comments" href="/allposts?id=${this.#userInfo.name}&name=${this.#userInfo.name}"><img src="../assets/img/icon/people.png" alt="Comentários" srcset=""></a>`
     }
 
     renderTasksInProgress() {
@@ -130,10 +134,10 @@ class MemberConfig {
                                     </div>
                                     <div class="col-1 task-buttons-box">
                                         <button class="btn-edit-report" value="${task._id}">
-                                            <img src="../assets/img/icon/draft.svg">
+                                            <img src="../assets/img/icon/draft.svg" value="${task._id}">
                                         </button>
                                         <button class="btn-save" value="${task._id}">
-                                            <img src="../assets/img/icon/done.svg">
+                                            <img src="../assets/img/icon/done.svg" value="${task._id}">
                                         </button>
                                     </div>
                                 </div>
@@ -144,6 +148,7 @@ class MemberConfig {
                 break;
             case 'tasksHistoric':
                 this.#controlSpans.taskConcludedSpan.innerHTML = content.length;
+                this.#classNamesAndIDs.tasksConcluded.innerHTML = '';
                 content.forEach(task => {
                     this.#classNamesAndIDs.tasksConcluded.innerHTML += `
                         <div class="task2">
@@ -175,12 +180,15 @@ class MemberConfig {
                 });
                 break;
             case 'edit-report':
+                console.log(content)
                 window.location.href = '#focusONtext';
+                this.#classNamesAndIDs.textArea.innerHTML = '';
                 this.#classNamesAndIDs.textArea.innerHTML = `
                         <textarea rows="8" cols="100"  placeholder="Escreva aqui..."></textarea>
                         <button value="${content}" onclick="sendTask(this)">Enviar relatório</button>`;
                 break;
             case 'last-commits': 
+                this.#classNamesAndIDs.commitsBox.innerHTML = ``;
                 content.forEach(element => {
                     const date = new Date(element.date);
                     const day = `${date.getDate()<10? '0' + date.getDate():date.getDate()}/${date.getMonth()+1 < 10? "0" + (date.getMonth()+1):date.getMonth()+1}/${date.getFullYear()}`;
@@ -223,11 +231,11 @@ class MemberConfig {
     }
 
     handleEditClick = (event) => {
-        this.printElements('edit-report', event.target.value);
+        this.printElements('edit-report', event.target.getAttribute('value'));
     };
 
     handleDayClick = (event) => {
-        dialog.type(event.target.value);
+        dialog.type(event.target.getAttribute('data-value'));
     };
 
 
@@ -298,3 +306,32 @@ class MemberConfig {
 const url = new URL(window.location.href);
 const member = new MemberConfig(url.pathname.split('/').pop());
 member.run();
+
+
+async function sendTask(element) {
+    const textArea = document.getElementById('placeTextArea').getElementsByTagName('textarea')[0];
+    const text = textArea.value;
+    const idTask = element.value;
+
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            description: text
+        })
+    }
+
+    try {
+        const response = await fetch('/api/task/concluded/' + idTask, options);
+        const data = await response.json();
+        console.log(data);
+        alert('success', 'Tarefa enviada com sucesso!');
+        //window.location.reload();
+    } catch (err) {
+        alert('error', err);
+        //window.location.reload();
+    }
+
+}

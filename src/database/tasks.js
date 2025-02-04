@@ -7,7 +7,7 @@ const schemas = require('../database/schemas');
 
 
 router.post('/api/tasks/', async (req, res) => {
-    const memberTasks = await schemas.Task.find({ user: req.body.id, concluded: false }).sort({ term: 1 });
+    const memberTasks = await schemas.Task.find({ user: { $in: [req.body.id] }, concluded: false }).sort({ term: 1 });
     res.json(memberTasks);
 });
 
@@ -17,7 +17,7 @@ router.get('/api/tasks/', async (req, res) => {
 });
 
 router.post('/api/tasks/concludedAll/', async (req, res) => {
-    const memberTasks = await schemas.Task.find({ user: req.body.id, concluded: true }).sort({ completionDate: 1 });
+    const memberTasks = await schemas.Task.find({ user: { $in: [req.body.id] }, concluded: true }).sort({ completionDate: 1 });
     res.json(memberTasks);
 });
 
@@ -44,6 +44,7 @@ router.post('/api/task/concluded/:id', async (req, res) => {
         const task = await schemas.Task.findByIdAndUpdate(req.params.id, { concluded: true });
         const taskDescription = await schemas.Task.findByIdAndUpdate(req.params.id, { description: req.body.description, completionDate: new Date() });
         res.json(taskDescription);
+        console.log(taskDescription)
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -51,43 +52,80 @@ router.post('/api/task/concluded/:id', async (req, res) => {
 
 router.get('/api/tasks/getAll/:id', async (req, res) => {
     try {
-        const tasks = await schemas.Task.find({user: req.params.id});
+        const tasks = await schemas.Task.find({ user: { $in: [req.params.id] }}).sort({term: 1});
         res.json(tasks);
     } catch (err) {
         res.status(500).json({ message: err.message });
-    }
+    };
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 router.post('/api/task/addTask/', async (req, res) => {
     try {
+
+        const usersTask = req.body.user;
+        console.log(usersTask)
+        // Aguardando todas as promessas
+        const usersList = await Promise.all(usersTask.map(async (email) => {
+            const user = await schemas.User.findOne({ email: email.trim() });
+            return user ? user.id : null; // Caso o usuário não seja encontrado
+        }));
+
+        // Criando a nova tarefa
         const newTask = new schemas.Task(req.body);
+        newTask.user = usersList;
+        await newTask.save(); // Salva a tarefa no banco de dados
 
-        // Busca o proprietário pelo nome (ou mude para _id se necessário)
-        const ownerNameQuery = await schemas.User.findOne({ name: req.body.ownerName });
-        if (!ownerNameQuery) {
-            return res.status(400).json({ message: "Proprietário não encontrado" });
-        }
-        newTask.ownerName = ownerNameQuery.name;
+        res.status(200).json({ 
+            status: 200,
+            message: "Task added successfully", 
+            task: newTask 
+        });
 
-        // Resolve todas as Promises de busca de usuários
-        const users = await Promise.all(
-            (req.body.user || []).map(async (element) => { // Garante que req.body.user existe
-                const user = await schemas.User.findOne({ email: element });
-                return user ? user._id : null; // Retorna null se não encontrar
-            })
-        );
-
-        // Remove usuários não encontrados (null)
-        newTask.user = users.filter(userId => userId !== null);
-
-        console.log(newTask);
-        await newTask.save();
-        res.status(201).json(newTask); // Retorna status 201 (Created)
-    } catch (error) {
-        console.error("Erro ao salvar tarefa:", error);
-        res.status(500).json({ message: "Erro interno do servidor" });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 router.get('/api/task/dailyTasks', async (req, res) => {

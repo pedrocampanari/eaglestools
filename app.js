@@ -191,8 +191,8 @@ app.get('/tableDaily/', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    // res.sendFile(__dirname + '/public/html/signup.html');
-    res.redirect('/tools/66db58e99cbab46eae150152')
+    res.sendFile(__dirname + '/public/html/signup.html');
+    //res.redirect('/tools/66db58e99cbab46eae150152')
 });
 
 app.get('/safetyZone/config/root/', (req, res) => {
