@@ -10,6 +10,8 @@ app.use(express.json());
 app.use(express.static('public'));
 
 
+
+
 // Configuração do multer para processar o arquivo
 const storage = multer.memoryStorage();  // Usando memória para o arquivo
 const upload = multer({ storage: storage })
@@ -19,6 +21,7 @@ const upload = multer({ storage: storage })
 const databaseRouteTasks = require('./src/database/tasks');
 const databaseRouteUsers = require('./src/database/users');
 const schemas = require('./src/database/schemas');
+const { decode } = require('punycode');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(databaseRouteTasks);
@@ -71,7 +74,9 @@ app.get('/lastCommits', async (req, res) => {
     const url = `https://api.github.com/repos/${owner}/${repo}/commits`;
 
     try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            method: 'GET',
+        });
         const data = await response.json();
         const lastCommits = data.map((element) => {
             return {
@@ -137,16 +142,19 @@ app.post("/code-dropzone-update", upload.single("file"), (req, res) => {
 
 app.post('/commit-files', (req, res)=>{
     exec(
-        `cd ${REPO_PATH} && git add . && git commit -m "${req.body.message}" && git push origin main`,
+        `cd ${REPO_PATH} && git pull origin main && git add . && git commit -m "${req.body.message}" && git push origin main`,
         (error, stdout, stderr) => {
             if (error) {
+                console.log(error);
                 return res.status(500).json({message: `Erro ao executar comando Git: Everything up-to-date`});
             }
 
             if (stderr && !stderr.includes("Everything up-to-date") && !stderr.includes("nothing to commit")) {
+                console.log('Envio- GITHUB: OK');
                 return res.status(200).json({message: `Commit realizado com alerta: ${stderr}`});
             }
 
+            console.log('Envio GITHUB: OK');
             res.json({message:`Arquivo enviado e commit realizado com sucesso!\n${stdout}`});
         }
     );
