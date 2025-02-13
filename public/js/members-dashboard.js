@@ -11,7 +11,8 @@ class MemberConfig {
 
     #initializeClassNamesAndIDs() {
         this.#classNamesAndIDs = {
-            tasksInProgress: document.getElementById('carousel-inner'),
+            tasksInProgressProject: document.getElementById('carousel-inner-project'),
+            tasksInProgressRobot: document.getElementById('carousel-inner-robot'),
             tasksConcluded: document.getElementById('historic'),
             btnAddTask: document.getElementById('taskAddButton'),
             textArea: document.getElementById('placeTextArea'),
@@ -21,6 +22,8 @@ class MemberConfig {
         this.#controlSpans = {
             taskInProgressSpan: document.getElementsByClassName('spn-tasks-in-progress')[0],
             taskConcludedSpan: document.getElementsByClassName('spn-historic')[0],
+            taskInProgressProjectSpan: document.getElementsByClassName('spn-tasks-in-progress-project')[0],
+            taskInProgressRobotSpan: document.getElementsByClassName('spn-tasks-in-progress-robot')[0],
             userInfo: document.getElementById('username'),
             dropzoneCommitBox: document.getElementsByClassName('control-span-close-commit-changes')[0]
         }
@@ -49,7 +52,7 @@ class MemberConfig {
             }
         };
 
-        if (method != 'GET'){
+        if (method != 'GET') {
             options.body = JSON.stringify(body);
         };
 
@@ -61,7 +64,7 @@ class MemberConfig {
         }
     }
 
-    async sendCommitFile () {
+    async sendCommitFile() {
         let formData = new FormData();
         let fileInput = document.getElementById("fileInput");
         let textArea = document.getElementById("message-commit").value;
@@ -70,24 +73,47 @@ class MemberConfig {
             alert("Selecione um arquivo para enviar!");
             return;
         }
-
-
         formData.append("file", fileInput.files[0]);
- 
+
         await fetch("/code-dropzone-update", {
             method: "POST",
             body: formData
         })
-        .then(response => response.text())
-        .then(data => alert(data))
-        .catch(error => alert(error));
+            .then(response => response.text())
+            .then(data => alert(data))
+            .catch(error => alert(error));
 
         const commit = await this.request('/commit-files', 'POST', { message: textArea });
         alert(commit.message);
 
         this.#classNamesAndIDs.dropzoneCommitBox.style.display = 'none';
-        await this.renderLastCommits();
+        window.location.reload();
+    }
 
+    async updateUserTask(id) {
+        try {
+            const textArea = document.getElementById('placeTextArea').getElementsByTagName('textarea')[0];
+            const description = textArea.value;
+            const response = await this.request(`/api/update/task/${id}`, 'PUT', { description: description });
+            
+            alert('Tarefa enviada com sucesso!');
+            window.location.reload();
+        }
+        catch (err) {
+            console.error("Error updating task:", err);
+        }
+    }
+
+    async sendUserTask(id) {
+        try {
+            const response = await this.request(`/api/update/task/${id}`, 'PUT', { description: '' });
+            
+            alert('Tarefa enviada com sucesso!');
+            window.location.reload();
+        }
+        catch (err) {
+            console.error("Error updating task:", err);
+        }
     }
 
     renderUserInfo() {
@@ -100,7 +126,7 @@ class MemberConfig {
             console.warn("No tasks available to render.");
             return;
         }
-        const tasksInProgress = this.tasks.filter(task => task.status === false);
+        const tasksInProgress = this.tasks.filter(task => task.concluded === false);
         this.printElements('tasksInProgress', tasksInProgress);
     }
 
@@ -114,29 +140,42 @@ class MemberConfig {
             console.warn("No tasks available to render.");
             return;
         }
-        const tasksConcluded = this.tasks.filter(task => task.status === true);
+        const tasksConcluded = this.tasks.filter(task => task.concluded === true);
         this.printElements('tasksHistoric', tasksConcluded);
     }
 
     printElements(type, content) {
         switch (type) {
             case 'tasksInProgress':
-                this.#controlSpans.taskInProgressSpan.innerHTML = content.length;
+                let carousel, robot = 0, project = 0;
                 content.forEach(task => {
-                    this.#classNamesAndIDs.tasksInProgress.innerHTML += `
+
+                    if (task.category != 'P') {
+                        carousel = this.#classNamesAndIDs.tasksInProgressRobot;
+                        robot++;
+                    } else {
+                        carousel = this.#classNamesAndIDs.tasksInProgressProject;
+                        project++;
+                    }
+
+                    carousel.innerHTML += `
                         <div class="carousel-item">
                             <div class="container-fluid">
                                 <div class="row">
                                     <div class="col-9">
-                                        <h4 class="info-task">${task.name} - Resp. ${task.ownerName}</h4>
-                                        <h4 class="info-task">Prazo: <span class="span-date">${(new Date(task.term).getDate()) < 10 ? "0" + (new Date(task.term).getDate()) : (new Date(task.term).getDate())}/${(new Date(task.term).getMonth() + 1) < 10 ? "0" + (new Date(task.term).getMonth() + 1) : (new Date(task.term).getMonth() + 1)}/${new Date(task.term).getFullYear()} - ${new Date(task.term).getHours()}:${new Date(task.term).getMinutes() > 10 ? new Date(task.term).getMinutes() : '0' + new Date(task.term).getMinutes()}</span></h4>
-                                        <h4 class="info-task">Status: <span class="span-status-${new Date(task.term) >= new Date() ? 'pendente' : 'atrasado'}">${new Date(task.term) >= new Date() ? 'Pendente' : 'Atrasado'}</span></h4>
+                                        <h4 class="info-task">${task.name}</h4>
+                                        <h4 class="info-task" style="font-size:0.7rem;">Resp: ${task.ownerName}</h4>
+                                        <h4 class="info-task" style="font-size:0.7rem;">Categoria: ${task.category} - Urgência: ${task.urgency}</h4>
+                                        <h4 class="info-task pt-2">
+                                            Prazo: <span class="span-date">${(new Date(task.term).getDate()) < 10 ? "0" + (new Date(task.term).getDate()) : (new Date(task.term).getDate())}/${(new Date(task.term).getMonth() + 1) < 10 ? "0" + (new Date(task.term).getMonth() + 1) : (new Date(task.term).getMonth() + 1)}/${new Date(task.term).getFullYear()} - ${new Date(task.term).getHours()}:${new Date(task.term).getMinutes() > 10 ? new Date(task.term).getMinutes() : '0' + new Date(task.term).getMinutes()}</span> - 
+                                            Status: <span class="span-status-${new Date(task.term) >= new Date() ? 'pendente' : 'atrasado'}">${new Date(task.term) >= new Date() ? 'Pendente' : 'Atrasado'}</span>
+                                        </h4>
                                     </div>
                                     <div class="col-1 task-buttons-box">
                                         <button class="btn-edit-report" value="${task._id}">
                                             <img src="../assets/img/icon/draft.svg" value="${task._id}">
                                         </button>
-                                        <button class="btn-save" value="${task._id}">
+                                        <button class="btn-save-report" value="${task._id}">
                                             <img src="../assets/img/icon/done.svg" value="${task._id}">
                                         </button>
                                     </div>
@@ -144,7 +183,17 @@ class MemberConfig {
                             </div>
                         </div>
                     `
+                    this.#controlSpans.taskInProgressProjectSpan.innerHTML = project;
+                    this.#controlSpans.taskInProgressRobotSpan.innerHTML = robot
                 });
+
+                const btnSave = document.getElementsByClassName('btn-save-report');
+                btnSave[0].addEventListener('click', this.handleSaveReport);
+
+
+                this.#controlSpans.taskInProgressSpan.innerHTML = content.length;
+                console.log(robot, project)
+                robot = 0, project = 0;
                 break;
             case 'tasksHistoric':
                 this.#controlSpans.taskConcludedSpan.innerHTML = content.length;
@@ -180,19 +229,21 @@ class MemberConfig {
                 });
                 break;
             case 'edit-report':
-                console.log(content)
                 window.location.href = '#focusONtext';
                 this.#classNamesAndIDs.textArea.innerHTML = '';
                 this.#classNamesAndIDs.textArea.innerHTML = `
                         <textarea rows="8" cols="100"  placeholder="Escreva aqui..."></textarea>
-                        <button value="${content}" onclick="sendTask(this)">Enviar relatório</button>`;
+                        <button value="${content}" class="btn-send-report" >Enviar relatório</button>`;
+                const btnUp = document.getElementsByClassName('btn-send-report');
+                btnUp[0].addEventListener('click', this.handleSendReport);
                 break;
-            case 'last-commits': 
+
+            case 'last-commits':
                 this.#classNamesAndIDs.commitsBox.innerHTML = ``;
                 content.forEach(element => {
                     const date = new Date(element.date);
-                    const day = `${date.getDate()<10? '0' + date.getDate():date.getDate()}/${date.getMonth()+1 < 10? "0" + (date.getMonth()+1):date.getMonth()+1}/${date.getFullYear()}`;
-                    const hour = `${date.getHours()<10? '0' + date.getHours():date.getHours()}:${date.getMinutes()< 10? '0' + date.getMinutes():date.getMinutes()}:${date.getSeconds()<10? '0' + date.getSeconds():date.getSeconds()}`;
+                    const day = `${date.getDate() < 10 ? '0' + date.getDate() : date.getDate()}/${date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1}/${date.getFullYear()}`;
+                    const hour = `${date.getHours() < 10 ? '0' + date.getHours() : date.getHours()}:${date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()}:${date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()}`;
                     this.#classNamesAndIDs.commitsBox.innerHTML += `
                         <div class="commit">
                             <div class="commit-message">
@@ -223,7 +274,7 @@ class MemberConfig {
         this.dropzone();
 
         const btnCommit = document.getElementById('btn-commit');
-        btnCommit.addEventListener('click', async ()=>{
+        btnCommit.addEventListener('click', async () => {
             await this.sendCommitFile();
         })
 
@@ -238,6 +289,17 @@ class MemberConfig {
         dialog.type(event.target.getAttribute('data-value'));
     };
 
+    handleSendReport = async (event) => {
+        await this.updateUserTask(event.target.value);
+        console.log(`SEND FILE`);
+
+    }
+
+    handleSaveReport = async (event) => {
+        //await this.sendUserTask(event.target.value);
+        console.log(`OK`);
+
+    }
 
     dropzone() {
         const dropzone = document.getElementById("dropzone");
@@ -273,23 +335,33 @@ class MemberConfig {
 
     handleFiles(files) {
         const fileList = document.getElementById("fileList");
-        
+
         this.#classNamesAndIDs.dropzoneCommitBox.style.display = 'flex';
         fileList.innerHTML = ""; // Limpa a lista
         for (const file of files) {
             const li = document.createElement("li");
-            li.innerHTML = `${file.name} (${(file.size / 1024).toFixed(2)} KB) <span class="control-span-close-commit-changes">x</span>`;            
+            li.innerHTML = `${file.name} (${(file.size / 1024).toFixed(2)} KB) <span class="control-span-close-commit-changes">x</span>`;
             fileList.appendChild(li);
         }
         // this.#controlSpans.dropzoneCommitBox.addEventListener("click", ()=> {
         //     this.#classNamesAndIDs.dropzoneCommitBox.style.display = 'none';
         // });
-        
+
     }
 
     dispatchMsgEvents() {
         document.removeEventListener('dialogClosed', this.enableBtns); // Remove antes de adicionar para evitar duplicações
-        document.addEventListener('dialogClosed', this.enableBtns.bind(this)); // Garante que this seja mantido
+        document.addEventListener('dialogClosed', () => {
+            this.enableBtns();
+            this.restartTasks();
+        }); // Garante que this seja mantido
+    }
+
+    async restartTasks() {
+        await this.storageInfoUser();
+        this.renderHistoric();
+
+        this.renderTasksInProgress();
     }
 
     async run() {
@@ -308,13 +380,22 @@ const member = new MemberConfig(url.pathname.split('/').pop());
 member.run();
 
 
+
+
+
+
+
+
+
+
+
 async function sendTask(element) {
     const textArea = document.getElementById('placeTextArea').getElementsByTagName('textarea')[0];
     const text = textArea.value;
     const idTask = element.value;
 
     const options = {
-        method: 'POST',
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },

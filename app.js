@@ -9,13 +9,9 @@ const multer = require("multer");
 app.use(express.json());
 app.use(express.static('public'));
 
-
-
-
-// Configuração do multer para processar o arquivo
-const storage = multer.memoryStorage();  // Usando memória para o arquivo
+const storage = multer.memoryStorage(); 
 const upload = multer({ storage: storage })
-
+const REPO_PATH = path.join(__dirname, "eaglesfiles");
 
 //Routes added
 const databaseRouteTasks = require('./src/database/tasks');
@@ -67,7 +63,6 @@ app.post('/login/', async (req, res) => {
 });
 
 
-
 app.get('/lastCommits', async (req, res) => {
     const owner = 'pedrocampanari';
     const repo = 'eaglesfiles';
@@ -90,35 +85,6 @@ app.get('/lastCommits', async (req, res) => {
     }
 
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const REPO_PATH = path.join(__dirname, "eaglesfiles");
 
 app.post("/code-dropzone-update", upload.single("file"), (req, res) => {
     if (!req.file) {
@@ -159,40 +125,6 @@ app.post('/commit-files', (req, res)=>{
         }
     );
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 app.get('/tableDaily/', (req, res) => {
     res.sendFile(__dirname + '/public/html/table.html');

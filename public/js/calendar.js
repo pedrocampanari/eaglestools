@@ -36,11 +36,12 @@ function renderCalendar(month, year) {
         const dayElement = document.createElement('div');
         dayElement.textContent = i;
 
-        if (date.getTime() < today.getTime()) {
+        if (date.getTime() <= today.getTime()) {
             dayElement.classList.add("dayLated");
         } else {
             dayElement.classList.add("dayNormal");
-            dayElement.setAttribute("data-value", date.toISOString()); // Armazena a data no elemento
+            date.setHours(0, 0, 0, 0);
+            dayElement.setAttribute("data-value", date); // Armazena a data no elemento
         }
 
         calendarDays.appendChild(dayElement);

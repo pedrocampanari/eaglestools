@@ -14,6 +14,7 @@ class Dialog {
         const name = document.getElementById('inp-name-task').value;
         const termValue = document.getElementById('inp-term').value;
         const urgency = document.getElementById('task-urgency').value;
+        const category = document.getElementById('inp-category-task').value;
 
         if (!name || emailsList.length === 0 || !termValue || !urgency) {
             alert('Por favor, preencha todos os campos obrigatórios.');
@@ -21,10 +22,11 @@ class Dialog {
             const colectedData = {
                 name: name,
                 user: emailsList,
-                ownerName: document.getElementById('username').textContent,
+                ownerName: `${emailsList.join(', ')}`,
                 description: '',
                 status: false,
                 term: new Date(termValue),
+                category: category,
                 urgency: urgency,
                 concluded: false,
                 completionDate: null
@@ -42,6 +44,7 @@ class Dialog {
                 if (data.status == 200) {
                     alert('Tarefa criada!');
                     this.disableDialog();
+                    window.location.reload();
                 } else {
                     alert('ERRO!', data.message)
                 }
@@ -100,7 +103,7 @@ class Dialog {
                                         <input pattern="[PR]" maxlength="1" class="inputs-add" type="text" name="nameTask" id="inp-category-task" placeholder="P ou R">
                                     </div>  
                                 </div>
-                                <input class="inputs-add" type="datetime-local" name="date" id="inp-term" value="${formattedDate}" mformattedDaten="${formattedDate}" max="${formattedDate}">
+                                <input class="inputs-add" type="datetime-local" name="date" id="inp-term" min="${formattedDate}" value="${formattedDate}">
                                 <label for="task-urgency">Urgência:</label>
                                 <input class="task-urgency" value="0" type="range" min="0" max="5" id="task-urgency" style="width: 20%">
                                 

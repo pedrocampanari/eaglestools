@@ -371,6 +371,12 @@ footer{
     border-radius: 50%;
 }
 
+.spn-number-of-elements:nth-child(2) {
+    background-color: #00b6adcc;
+    width: 20px;
+    height: 20px; 
+}
+
 #historic {
     max-height: 18rem;
     overflow-y: auto;

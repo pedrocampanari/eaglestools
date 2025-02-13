@@ -39,6 +39,20 @@ router.get('/api/task/concluded/:id', async (req, res) => {
     }
 });
 
+router.put('/api/update/task/:id', async (req, res) => {
+    
+    try {
+        const up = req.body;
+        up.completionDate = new Date();
+        up.concluded = true;
+  
+        const task = await schemas.Task.findByIdAndUpdate(req.params.id, up);
+        res.json(task);
+    } catch (error) {
+        res.status(404).json({ message: 'Task not found' });
+    }
+});
+
 router.post('/api/task/concluded/:id', async (req, res) => {
     try {
         const task = await schemas.Task.findByIdAndUpdate(req.params.id, { concluded: true });
@@ -52,7 +66,7 @@ router.post('/api/task/concluded/:id', async (req, res) => {
 
 router.get('/api/tasks/getAll/:id', async (req, res) => {
     try {
-        const tasks = await schemas.Task.find({ user: { $in: [req.params.id] }}).sort({term: 1});
+        const tasks = await schemas.Task.find({ user: { $in: [req.params.id] }}).sort({urgency: -1});
         res.json(tasks);
     } catch (err) {
         res.status(500).json({ message: err.message });
