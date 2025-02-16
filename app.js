@@ -11,7 +11,7 @@ app.use(express.static('public'));
 
 const storage = multer.memoryStorage(); 
 const upload = multer({ storage: storage })
-const REPO_PATH = path.join(__dirname, "eaglesfiles");
+const REPO_PATH = path.join(__dirname, "../eaglesfiles");
 
 //Routes added
 const databaseRouteTasks = require('./src/database/tasks');

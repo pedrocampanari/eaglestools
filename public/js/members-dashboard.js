@@ -73,6 +73,13 @@ class MemberConfig {
             alert("Selecione um arquivo para enviar!");
             return;
         }
+
+        if (fileInput.files[0].size > 20 * 1024 *1024){
+            alert("Arquivo muito grande!");
+            window.location.reload();
+            return;
+        }
+
         formData.append("file", fileInput.files[0]);
 
         await fetch("/code-dropzone-update", {
@@ -187,8 +194,10 @@ class MemberConfig {
                     this.#controlSpans.taskInProgressRobotSpan.innerHTML = robot
                 });
 
-                const btnSave = document.getElementsByClassName('btn-save-report');
-                btnSave[0].addEventListener('click', this.handleSaveReport);
+                if (content != 0) {
+                    const btnSave = document.getElementsByClassName('btn-save-report');
+                    btnSave[0].addEventListener('click', this.handleSaveReport);
+                }
 
 
                 this.#controlSpans.taskInProgressSpan.innerHTML = content.length;
