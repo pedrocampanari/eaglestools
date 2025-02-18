@@ -22,8 +22,8 @@ class MemberConfig {
         this.#controlSpans = {
             taskInProgressSpan: document.getElementsByClassName('spn-tasks-in-progress')[0],
             taskConcludedSpan: document.getElementsByClassName('spn-historic')[0],
-            taskInProgressProjectSpan: document.getElementsByClassName('spn-tasks-in-progress-project')[0],
-            taskInProgressRobotSpan: document.getElementsByClassName('spn-tasks-in-progress-robot')[0],
+            taskInProgressProjectSpan: document.getElementById('spn-tasks-in-progress-project'),
+            taskInProgressRobotSpan: document.getElementById('spn-tasks-in-progress-robot'),
             userInfo: document.getElementById('username'),
             dropzoneCommitBox: document.getElementsByClassName('control-span-close-commit-changes')[0]
         }
@@ -34,11 +34,9 @@ class MemberConfig {
         try {
             const userInfoResponse = await fetch(`/api/userInfo/${this.member}`);
             this.#userInfo = await userInfoResponse.json();
-            console.log(this.#userInfo);
 
             const tasksResponse = await fetch(`/api/tasks/getAll/${this.member}`);
             this.tasks = await tasksResponse.json();
-            console.log(this.tasks);
         } catch (err) {
             console.error("Error fetching data:", err);
         }
@@ -190,18 +188,12 @@ class MemberConfig {
                             </div>
                         </div>
                     `
-                    this.#controlSpans.taskInProgressProjectSpan.innerHTML = project;
-                    this.#controlSpans.taskInProgressRobotSpan.innerHTML = robot
                 });
 
-                if (content != 0) {
-                    const btnSave = document.getElementsByClassName('btn-save-report');
-                    btnSave[0].addEventListener('click', this.handleSaveReport);
-                }
-
+                document.getElementById("spn-tasks-in-progress-project").innerText = project;
+                document.getElementById("spn-tasks-in-progress-robot").innerText = robot;
 
                 this.#controlSpans.taskInProgressSpan.innerHTML = content.length;
-                console.log(robot, project)
                 robot = 0, project = 0;
                 break;
             case 'tasksHistoric':
@@ -209,17 +201,21 @@ class MemberConfig {
                 this.#classNamesAndIDs.tasksConcluded.innerHTML = '';
                 content.forEach(task => {
                     this.#classNamesAndIDs.tasksConcluded.innerHTML += `
-                        <div class="task2">
-                            <div class="pt-2 pb-2">
-                                <div class="container-fluid">
-                                    <div class="row">
-                                        <div class="col p-0">
-                                            <h4 class="info-task">${task.name} - Resp. ${task.ownerName}</h4>
-                                        </div>
+                        <div class="task2 p-2">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col p-0">
+                                        <h4 class="info-task">${task.name} - Resp. ${task.ownerName}</h4>
                                     </div>
+                                </div>
                                 <div class="row">
                                     <div class="col p-0">
                                         <h4 class="info-task">Data de conclusão: <span class="span-date">${(new Date(task.completionDate).getDate()) < 10 ? "0" + (new Date(task.completionDate).getDate()) : (new Date(task.completionDate).getDate())}/${(new Date(task.completionDate).getMonth() + 1) < 10 ? "0" + (new Date(task.completionDate).getMonth() + 1) : (new Date(task.completionDate).getMonth() + 1)}/${new Date(task.completionDate).getFullYear()}</span></h4>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col p-0">
+                                        <h4 class="info-task">Categoria: <span class="span-date">${task.category}</span></h4>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -229,11 +225,11 @@ class MemberConfig {
                                 </div>
                             </div>
                             <div class="task-buttons-box p-1">
-                                <button onclick="showDraft(this)" value="${task._id}">
-                                    <img src="../assets/img/icon/draft.svg">
+                                <button class="btn-view-report" value="${task._id}">
+                                    <img src="../assets/img/icon/draft.svg" value="${task._id}">
                                 </button>
                             </div>
-                        </div>
+                    </div>
                     `
                 });
                 break;
@@ -246,7 +242,17 @@ class MemberConfig {
                 const btnUp = document.getElementsByClassName('btn-send-report');
                 btnUp[0].addEventListener('click', this.handleSendReport);
                 break;
-
+            case 'view-report':
+                window.location.href = '#focusONtext';
+                this.#classNamesAndIDs.textArea.innerHTML = '';
+                this.#classNamesAndIDs.textArea.innerHTML = `
+                        <textarea rows="8" cols="100" disabled>${content}</textarea>
+                        <button value="${content}" class="btn-send-report">Fechar relatório</button>`;
+                const btnclose = document.getElementsByClassName('btn-send-report');
+                btnclose[0].addEventListener('click', ()=>{
+                    window.location.reload();
+                });
+                break;
             case 'last-commits':
                 this.#classNamesAndIDs.commitsBox.innerHTML = ``;
                 content.forEach(element => {
@@ -275,6 +281,16 @@ class MemberConfig {
             btn.addEventListener('click', this.handleEditClick);
         });
 
+        document.querySelectorAll('.btn-save-report').forEach(btn => {
+            btn.removeEventListener('click', this.handleSaveReport);
+            btn.addEventListener('click', this.handleSaveReport);
+        });
+
+        document.querySelectorAll('.btn-view-report').forEach(btn => {
+            btn.removeEventListener('click', this.handleViewClick);
+            btn.addEventListener('click', this.handleViewClick);
+        });
+
         document.querySelectorAll('.dayNormal').forEach(btn => {
             btn.removeEventListener('click', this.handleDayClick);
             btn.addEventListener('click', this.handleDayClick);
@@ -291,7 +307,12 @@ class MemberConfig {
     }
 
     handleEditClick = (event) => {
-        this.printElements('edit-report', event.target.getAttribute('value'));
+        this.printElements('edit-report', event.target.getAttribute('value'));  
+    };
+
+    handleViewClick = (event) => {
+        const task = this.tasks.filter(task => task._id == event.target.getAttribute('value'));
+        this.printElements('view-report', task[0].description);  
     };
 
     handleDayClick = (event) => {
@@ -300,14 +321,10 @@ class MemberConfig {
 
     handleSendReport = async (event) => {
         await this.updateUserTask(event.target.value);
-        console.log(`SEND FILE`);
-
     }
 
     handleSaveReport = async (event) => {
-        //await this.sendUserTask(event.target.value);
-        console.log(`OK`);
-
+        await this.sendUserTask(event.target.getAttribute("value"));
     }
 
     dropzone() {
@@ -369,7 +386,6 @@ class MemberConfig {
     async restartTasks() {
         await this.storageInfoUser();
         this.renderHistoric();
-
         this.renderTasksInProgress();
     }
 
@@ -388,40 +404,3 @@ const url = new URL(window.location.href);
 const member = new MemberConfig(url.pathname.split('/').pop());
 member.run();
 
-
-
-
-
-
-
-
-
-
-
-async function sendTask(element) {
-    const textArea = document.getElementById('placeTextArea').getElementsByTagName('textarea')[0];
-    const text = textArea.value;
-    const idTask = element.value;
-
-    const options = {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            description: text
-        })
-    }
-
-    try {
-        const response = await fetch('/api/task/concluded/' + idTask, options);
-        const data = await response.json();
-        console.log(data);
-        alert('success', 'Tarefa enviada com sucesso!');
-        //window.location.reload();
-    } catch (err) {
-        alert('error', err);
-        //window.location.reload();
-    }
-
-}

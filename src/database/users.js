@@ -17,7 +17,17 @@ router.post('/api/user/add/', async (req, res) => {
         res.status(500).json({ message: 'Error creating user' });
     }
 });
- 
+
+router.post('/api/userInfoEmail/', async (req, res)=>{
+    try {
+        const id = req.body.name;
+        const user = await schemas.User.findOne({name: id});
+        res.json(user);
+    } catch (err) {
+        res.status(500).json({ message: 'Error fetching user' });
+    }
+})
+
 router.get('/api/userInfo/:id', async (req, res) => {
     try {
         const id = req.params.id;

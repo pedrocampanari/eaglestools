@@ -47,6 +47,8 @@ app.get('/tools/:id', async (req, res) => {
 
 app.post('/login/', async (req, res) => {
     const { email, password } = req.body;
+
+    console.log(email, password)
     const user = await schemas.User.findOne({ email: email });
     console.log(user)
 
@@ -131,7 +133,7 @@ app.get('/tableDaily/', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/public/html/signup.html');
+    res.sendFile(__dirname + '/public/html/login.html');
     //res.redirect('/tools/66db58e99cbab46eae150152')
 });
 

@@ -69,7 +69,7 @@ class Dialog {
         this.mainTag[0].classList.remove("blocked");
     }
 
-    createDialog(i) {
+    async createDialog(i) {
         const formattedDate = new Date(i).toISOString().slice(0, 16);
         this.body.innerHTML += `
         <section class="dialogBox">
@@ -122,6 +122,20 @@ class Dialog {
             </div>
         </section>
         `
+        const response = await fetch(`/api/userInfoEmail/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name: document.getElementById('username').textContent})
+
+        }).then((reponse)=>{
+            return reponse.json();
+        }).then(data => {
+            this.createChipUser(data.email + '+')
+        }).catch(err => {
+            console.error(err);
+        });
     }
 
     async inputAutoComplete() {
@@ -198,6 +212,18 @@ class Dialog {
                 suggestionsBox.style.display = "none";
             }
         });
+    }
+
+    createChipUser(text) {
+        const inputField = document.getElementById("inputField");
+        const inputContainer = document.getElementById("recipientInput");
+        const chip = document.createElement("div");
+        chip.classList.add("chip");
+        chip.textContent = text;
+        chip.setAttribute('name', text);
+        chip.setAttribute('disabled', true);
+
+        inputContainer.insertBefore(chip, inputField);
     }
 
     removeDialog() {

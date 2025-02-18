@@ -1,74 +1,52 @@
-const btnSignIn = document.getElementsByClassName("logIn")[0];
-const btnSignUp = document.getElementsByClassName("signUp")[0];
-
-
-const form = document.querySelector('form');
-
-form.addEventListener('submit', (event) => {
-  event.preventDefault();
-});
-
-btnSignIn.addEventListener("click", async () => {
-    const email = document.getElementById("login__username").value;
-    const password = document.getElementById("login__password").value;
-    const data = {
-        "email": email,
-        "password": password
-    };
-
-    const options = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-        },
-        body: JSON.stringify(data)
-    };
-
-    const response = await fetch('/login', options);
-    const responseData = await response.json();
-
-    if (responseData.status == 200){
-       window.location.href = responseData.redirectUrl;
-    }else{
-        alert('error', responseData.message);
-        window.location.reload();
-    }
-});
-
-btnSignUp.addEventListener("click", async () => {
-    const inpUserName = document.getElementById('inp-username').value;
-    const inpEmail = document.getElementById('inp-email').value;
-    const inpPassword = document.getElementById('inp-password').value;
-
-    if (!(inpUserName == '' || inpEmail == '' || inpPassword == '')){
-        let bodyRequest = {
-            "name": inpUserName,
-            "email": inpEmail,
-            "password": inpPassword,
-            "root": false
-        };
-    
+class Login {
+    async #request(body) {
         const options = {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(bodyRequest),
-        };
-    
-        const response = await fetch('/api/user/add/', options);
-        const data = new Promise.all(await response.json());
-        console.log(data.message);
-    
-        alert(data);
-        window.location.reload();
-    }else{
-        alert('error', 'Preencha todos os campos');
-        window.location.reload();
+            body: JSON.stringify(body),
+        }
+
+        try {
+            const response = await fetch('/login/', options);
+            const data = await response.json();
+            return data;
+        }catch (err) {
+            console.error(err);
+        }
     }
 
-    
-    // window.location.reload();
+    async #login() {
+        const body = {
+            email: document.getElementById('input-username').value,
+            password: document.getElementById('input-password').value
+        }
+        const response = await this.#request(body);
+        if (response.status == 404){
+            alert(response.message);
+            return
+        }
+        window.location.href = response.redirectUrl;
+    }
 
-});
+    enableButtons() {
+        const loginButton = document.getElementById('login-button');
+        document.getElementsByClassName('login-form')[0].addEventListener('submit', (event)=>{
+            event.preventDefault();
+        })
+
+        loginButton.addEventListener('click', ()=> {
+            this.#login();
+        });
+
+        
+    }
+
+    run() {
+        this.enableButtons();
+    }
+}
+
+const login = new Login();
+login.run();
