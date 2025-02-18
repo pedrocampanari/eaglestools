@@ -34,9 +34,11 @@ class MemberConfig {
         try {
             const userInfoResponse = await fetch(`/api/userInfo/${this.member}`);
             this.#userInfo = await userInfoResponse.json();
+            console.log(this.#userInfo);
 
             const tasksResponse = await fetch(`/api/tasks/getAll/${this.member}`);
             this.tasks = await tasksResponse.json();
+            console.log(this.tasks);
         } catch (err) {
             console.error("Error fetching data:", err);
         }
@@ -194,6 +196,7 @@ class MemberConfig {
                 document.getElementById("spn-tasks-in-progress-robot").innerText = robot;
 
                 this.#controlSpans.taskInProgressSpan.innerHTML = content.length;
+                console.log(robot, project)
                 robot = 0, project = 0;
                 break;
             case 'tasksHistoric':
@@ -321,6 +324,8 @@ class MemberConfig {
 
     handleSendReport = async (event) => {
         await this.updateUserTask(event.target.value);
+        console.log(`SEND FILE`);
+
     }
 
     handleSaveReport = async (event) => {
