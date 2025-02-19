@@ -158,10 +158,10 @@ class MemberConfig {
                 content.forEach(task => {
 
                     if (task.category != 'P') {
-                        carousel = this.#classNamesAndIDs.tasksInProgressRobot;
+                        carousel = document.getElementById('carousel-inner-robot');
                         robot++;
                     } else {
-                        carousel = this.#classNamesAndIDs.tasksInProgressProject;
+                        carousel = document.getElementById('carousel-inner-project')
                         project++;
                     }
 
