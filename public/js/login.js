@@ -23,7 +23,7 @@ class Login {
             password: document.getElementById('input-password').value
         }
         const response = await this.#request(body);
-        if (response.status == 404){
+        if (response.status == 404 || response.status == 400){
             alert(response.message);
             return
         }
