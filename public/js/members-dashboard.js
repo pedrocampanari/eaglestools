@@ -134,7 +134,9 @@ class MemberConfig {
             return;
         }
         const tasksInProgress = this.tasks.filter(task => task.concluded === false);
-        this.printElements('tasksInProgress', tasksInProgress);
+        document.addEventListener("DOMContentLoaded", () => {
+            this.printElements('tasksInProgress', tasksInProgress);
+        });
     }
 
     async renderLastCommits() {
@@ -152,8 +154,15 @@ class MemberConfig {
     }
 
     printElements(type, content) {
+        console.log(type)
+
+        if (!content || !Array.isArray(content) || content.length === 0) {
+            console.error("Erro: content vazio ou inválido!");
+            return;
+        }
         switch (type) {
             case 'tasksInProgress':
+                console.log('Entrou')
                 let carousel, robot = 0, project = 0;
                 content.forEach(task => {
                     console.log(task);
@@ -398,11 +407,13 @@ class MemberConfig {
     async run() {
         await this.storageInfoUser();
         await this.renderLastCommits();
-        this.renderUserInfo();
-        this.renderTasksInProgress();
-        this.renderHistoric();
-        this.enableBtns();
-        this.dispatchMsgEvents();
+
+            this.renderUserInfo();
+            this.renderTasksInProgress();
+            this.renderHistoric();
+            this.enableBtns();
+            this.dispatchMsgEvents();
+       
     }
 }
 
