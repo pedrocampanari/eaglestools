@@ -156,6 +156,7 @@ class MemberConfig {
             case 'tasksInProgress':
                 let carousel, robot = 0, project = 0;
                 content.forEach(task => {
+                    console.log(task);
 
                     if (task.category != 'P') {
                         carousel = document.getElementById('carousel-inner-robot');

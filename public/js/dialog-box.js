@@ -44,7 +44,7 @@ class Dialog {
                 if (data.status == 200) {
                     alert('Tarefa criada!');
                     this.disableDialog();
-                    //window.location.reload();
+                    window.location.reload();
                 } else {
                     alert('ERRO!', data.message)
                 }
