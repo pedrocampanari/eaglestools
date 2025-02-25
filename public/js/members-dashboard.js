@@ -134,6 +134,7 @@ class MemberConfig {
             return;
         }
         const tasksInProgress = this.tasks.filter(task => task.concluded === false);
+        console.log('TasksInProgress:', tasksInProgress)
         this.printElements('tasksInProgress', tasksInProgress);
     }
 
