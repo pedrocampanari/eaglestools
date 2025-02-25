@@ -67,6 +67,7 @@ router.post('/api/task/concluded/:id', async (req, res) => {
 router.get('/api/tasks/getAll/:id', async (req, res) => {
     try {
         const tasks = await schemas.Task.find({ user: { $in: [req.params.id] }}).sort({urgency: -1});
+        console.log('Tasks: ', tasks);
         res.json(tasks);
     } catch (err) {
         res.status(500).json({ message: err.message });
