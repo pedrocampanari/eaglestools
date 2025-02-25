@@ -134,9 +134,7 @@ class MemberConfig {
             return;
         }
         const tasksInProgress = this.tasks.filter(task => task.concluded === false);
-        document.addEventListener("DOMContentLoaded", () => {
-            this.printElements('tasksInProgress', tasksInProgress);
-        });
+        this.printElements('tasksInProgress', tasksInProgress);
     }
 
     async renderLastCommits() {
