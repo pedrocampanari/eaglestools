@@ -77,34 +77,34 @@ class Dialog {
                 <section class="config-display-dialog">
                     <div class="row">
                         <div class="title col-md-12 p-0">
-                            <h1>CRIAR TAREFA +</h1>
+                            <h1>CREATE TASK +</h1>
                         </div>
                     </div>
                 </section>
                 <section class="config-display-dialog">
                     <div class="row">
                         <div class="col p-0">
-                            <h5>Adicionar nova tarefa</h5>
+                            <h5>Add new task</h5>
                             <div>
                                 <div class="label-ipt">
-                                    <label>Responsáveis</label>
+                                    <label>Owners</label>
                                     <div class="input-container" id="recipientInput">
-                                        <input type="text" id="inputField" placeholder="Digite um email">
+                                        <input type="text" id="inputField" placeholder="Write an email">
                                         <div class="suggestions" id="suggestionsBox"></div>
                                     </div>
                                 </div> 
                                 <div style="display: flex;" class="disp-flex-inpt">
                                     <div class="label-ipt">
-                                        <label>Nome da tarefa</label>
-                                        <input class="inputs-add" type="text" name="nameTask" id="inp-name-task" placeholder="organizar laboratório<3">
+                                        <label>Task name</label>
+                                        <input class="inputs-add" type="text" name="nameTask" id="inp-name-task" placeholder="organize laboratory<3">
                                     </div> 
                                     <div class="label-ipt">
-                                        <label>Categoria (Projeto ou robô)</label>
-                                        <input pattern="[PR]" maxlength="1" class="inputs-add" type="text" name="nameTask" id="inp-category-task" placeholder="P ou R">
+                                        <label>Category (Project or robot)</label>
+                                        <input pattern="[PR]" maxlength="1" class="inputs-add" type="text" name="nameTask" id="inp-category-task" placeholder="P or R">
                                     </div>  
                                 </div>
                                 <input class="inputs-add" type="datetime-local" name="date" id="inp-term" min="${formattedDate}" value="${formattedDate}">
-                                <label for="task-urgency">Urgência:</label>
+                                <label for="task-urgency">Urgency:</label>
                                 <input class="task-urgency" value="0" type="range" min="0" max="5" id="task-urgency" style="width: 20%">
                                 
                             </div>
@@ -114,8 +114,8 @@ class Dialog {
                 <section class="config-display-dialog">
                     <div class="row div-btn-close-dialog">
                         <div class="col-md-12 p-0 div-btns-dialog">
-                            <button class="btn-save-dialog">SALVAR</button>
-                            <button class="btn-close-dialog">FECHAR</button>
+                            <button class="btn-save-dialog">SAVE</button>
+                            <button class="btn-close-dialog">CLOSE</button>
                         </div>
                     </div>
                 </section>        

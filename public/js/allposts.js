@@ -15,8 +15,8 @@ const showAllPosts = async () => {
         const posts = data.map((post, i) => {
             console.log(post)
             return `<div class="post card p-3">
-                        <h4 style="font-size: 1.2rem" class="span-roboto-condensed"><span ><img width="30px" src="../assets/img/icon/person.png"/></span> - <i>${post.ownerName}</i> <button class="seeTask" type="button" onclick="seePost(${i})"class="btn">Ver</button></h4>
-                        <p class="poster closeposter"><span class="postname" hidden><b><i>Título:</i> ${post.name}</b><br><br></span>${post.description}
+                        <h4 style="font-size: 1.2rem" class="span-roboto-condensed"><span ><img width="30px" src="../assets/img/icon/person.png"/></span> - <i>${post.ownerName}</i> <button class="seeTask" type="button" onclick="seePost(${i})"class="btn">See</button></h4>
+                        <p class="poster closeposter"><span class="postname" hidden><b><i>Title:</i> ${post.name}</b><br><br></span>${post.description}
                         </p>
                     </div>`});
         containerShowAll.innerHTML = posts.join('');
@@ -34,7 +34,7 @@ const closePost = (element) => {
     const button = document.getElementsByClassName('seeTask')[element];
     const postname = document.getElementsByClassName('postname')[element];
     postname.setAttribute("hidden", "");
-    button.innerHTML = `Ver`
+    button.innerHTML = `See`
     button.setAttribute("onclick", `seePost(${element})`);
 }
 
@@ -48,7 +48,7 @@ const seePost = (element) =>{
     const button = document.getElementsByClassName('seeTask')[element];
     const postname = document.getElementsByClassName('postname')[element];
     postname.removeAttribute("hidden");
-    button.innerHTML = `Fechar`;
+    button.innerHTML = `Close`;
     button.setAttribute("onclick", `closePost(${element})`);
 
 }

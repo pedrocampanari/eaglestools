@@ -19,7 +19,7 @@
                 </div>
                 <div class="col">
                     <div class="user-box-item  d-flex justify-content-end pt-3">
-                        <h3 class="user-box-link">Olá, <span id="username"></span>!</h3>
+                        <h3 class="user-box-link">Hello! <span id="username"></span></h3>
                     </div>
                 </div>
             </div>
@@ -32,22 +32,22 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col">
-                            <h3 class="roboto-condensed">Aba de relatórios</h3>
+                            <h3 class="roboto-condensed">Reports tab</h3>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col">
                             <div class="box" id="placeTextArea">
                                 <span class="span-roboto-condensed text-no-content">
-                                    Clique em <span class="icon-draft"><img src="../assets/img/icon/draft.svg" alt=""
-                                            srcset=""></span> para escrever relatórios na sua tarefa
+                                    Click <span class="icon-draft"><img src="../assets/img/icon/draft.svg" alt=""
+                                            srcset=""></span> to write reports on your task
                                 </span>
                             </div>
                         </div>
                     </div>
                     <div class="row pt-3">
                         <div class="col">
-                            <h3 class="roboto-condensed">Últimos commits</h3>
+                            <h3 class="roboto-condensed">Last commits</h3>
                         </div>
                     </div>
                     <div class="row">
@@ -59,7 +59,7 @@
                     </div>
                     <div class="row pt-3">
                         <div class="col">
-                            <h3 class="roboto-condensed">Histórico de tarefas<span class="spn-number-of-elements spn-historic">0</span></h3>
+                            <h3 class="roboto-condensed">Task history<span class="spn-number-of-elements spn-historic">0</span></h3>
                         </div>
                     </div>
                     <div class="row">
@@ -78,18 +78,18 @@
                             <div class="dinamic-box">
                                 <div id="calendar-container">
                                     <div id="calendar-header">
-                                        <button id="prevMonth">Anterior</button>
+                                        <button id="prevMonth">Prev</button>
                                         <span id="monthYear"></span>
-                                        <button id="nextMonth">Próximo</button>
+                                        <button id="nextMonth">Next</button>
                                     </div>
                                     <div id="calendar-weekdays">
-                                        <div>Seg</div>
-                                        <div>Ter</div>
-                                        <div>Qua</div>
-                                        <div>Qui</div>
-                                        <div>Sex</div>
-                                        <div>Sáb</div>
-                                        <div>Dom</div>
+                                        <div>Mon</div>
+                                        <div>Tue</div>
+                                        <div>Wed</div>
+                                        <div>Thu</div>
+                                        <div>Fri</div>
+                                        <div>Sat</div>
+                                        <div>Sun</div>
                                     </div>
                                     <div id="calendar-days"></div>
                                 </div>
@@ -98,7 +98,7 @@
                     </div>
                     <div class="row pt-3">
                         <div class="col">
-                            <h3 class="roboto-condensed">Suas tarefas em andamento <span class="spn-number-of-elements spn-tasks-in-progress">0</span></h3>
+                            <h3 class="roboto-condensed">Your tasks in progress<span class="spn-number-of-elements spn-tasks-in-progress">0</span></h3>
                         </div>
                     </div>
                     <div class="row">
@@ -107,7 +107,7 @@
                                 <div id="carouselExample1" class="carousel slide">
                                     <div class="carousel-inner" id="carousel-inner-project">
                                         <div class="carousel-item active">
-                                            <h5 style="text-align: center;" class="roboto-condensed"><i><b>PROJETO</b></i><div class="spn-number-of-elements" id="spn-tasks-in-progress-project">0</div></h5>
+                                            <h5 style="text-align: center;" class="roboto-condensed"><i><b>PROJECT</b></i><div class="spn-number-of-elements" id="spn-tasks-in-progress-project">0</div></h5>
                                         </div>
                                     </div>
                                     <button class="carousel-control-next" type="button"
@@ -126,7 +126,7 @@
                                 <div id="carouselExample2" class="carousel slide">
                                     <div class="carousel-inner" id="carousel-inner-robot">
                                         <div class="carousel-item active">
-                                            <h5 style="text-align: center;" class="roboto-condensed"><i><b>ROBÔ</b></i><div class="spn-number-of-elements" id="spn-tasks-in-progress-robot">0</div></h5>
+                                            <h5 style="text-align: center;" class="roboto-condensed"><i><b>ROBOT</b></i><div class="spn-number-of-elements" id="spn-tasks-in-progress-robot">0</div></h5>
                                         </div>
                                     </div>
                                     <button class="carousel-control-next" type="button"
@@ -141,21 +141,21 @@
                     </div>
                     <div class="row pt-3">
                         <div class="col">
-                            <h3 class="roboto-condensed">Dropzone para versionamento de código</h3>
+                            <h3 class="roboto-condensed">Dropzone for code versioning</h3>
                         </div>
                     </div>
                     <div class="row">
                        <div class="col">
                             <div id="dropzone">
-                                <p>Arraste o arquivo ou clique para adicionar</p>
+                                <p>Drop file or click to add</p>
                                 <input type="file" id="fileInput" size="">
                             </div>
                             <div class="dropzone-commit-box mt-2">
                               
-                                <h6>Alterações:
+                                <h6>Changes:
                                     <ul id="fileList"></ul>
                                 </h6>
-                                <textarea name="" id="message-commit" cols="50" rows="2" placeholder="descreva todas alterações..."></textarea>
+                                <textarea name="" id="message-commit" cols="50" rows="2" placeholder="describe all changes..."></textarea>
                                 <button id="btn-commit">Commit</button>
                             </div>
                        </div> 

@@ -10,12 +10,18 @@ function renderCalendar(month, year) {
     const today = new Date();
     
     // Nomes dos meses em português
+
     const monthNames = [
-        'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+        "January", "February", "March", "April", "May", "June", 
+        "July", "August", "September", "October", "November", "December"
     ];
 
-    monthYear.textContent = `${monthNames[month]} de ${year}`;
+    // const monthNames = [
+    //     'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+    //     'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+    // ];
+
+    monthYear.textContent = `${monthNames[month]} ${year}`;
     calendarDays.innerHTML = '';
 
     // Ajustando o primeiro dia da semana (para alinhar corretamente)

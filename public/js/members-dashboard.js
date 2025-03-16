@@ -153,12 +153,7 @@ class MemberConfig {
     }
 
     printElements(type, content) {
-        console.log(type)
-
-        if (!content || !Array.isArray(content) || content.length === 0) {
-            console.error("Erro: content vazio ou inválido!");
-            return;
-        }
+        console.log(type);
         switch (type) {
             case 'tasksInProgress':
                 console.log('Entrou')
@@ -180,11 +175,11 @@ class MemberConfig {
                                 <div class="row">
                                     <div class="col-9">
                                         <h4 class="info-task">${task.name}</h4>
-                                        <h4 class="info-task" style="font-size:0.7rem;">Resp: ${task.ownerName}</h4>
-                                        <h4 class="info-task" style="font-size:0.7rem;">Categoria: ${task.category} - Urgência: ${task.urgency}</h4>
+                                        <h4 class="info-task" style="font-size:0.7rem;">Owner: ${task.ownerName}</h4>
+                                        <h4 class="info-task" style="font-size:0.7rem;">Category: ${task.category} - Urgency: ${task.urgency}</h4>
                                         <h4 class="info-task pt-2">
-                                            Prazo: <span class="span-date">${(new Date(task.term).getDate()) < 10 ? "0" + (new Date(task.term).getDate()) : (new Date(task.term).getDate())}/${(new Date(task.term).getMonth() + 1) < 10 ? "0" + (new Date(task.term).getMonth() + 1) : (new Date(task.term).getMonth() + 1)}/${new Date(task.term).getFullYear()} - ${new Date(task.term).getHours()}:${new Date(task.term).getMinutes() > 10 ? new Date(task.term).getMinutes() : '0' + new Date(task.term).getMinutes()}</span> - 
-                                            Status: <span class="span-status-${new Date(task.term) >= new Date() ? 'pendente' : 'atrasado'}">${new Date(task.term) >= new Date() ? 'Pendente' : 'Atrasado'}</span>
+                                            Term: <span class="span-date">${(new Date(task.term).getDate()) < 10 ? "0" + (new Date(task.term).getDate()) : (new Date(task.term).getDate())}/${(new Date(task.term).getMonth() + 1) < 10 ? "0" + (new Date(task.term).getMonth() + 1) : (new Date(task.term).getMonth() + 1)}/${new Date(task.term).getFullYear()} - ${new Date(task.term).getHours()}:${new Date(task.term).getMinutes() > 10 ? new Date(task.term).getMinutes() : '0' + new Date(task.term).getMinutes()}</span> - 
+                                            Status: <span class="span-status-${new Date(task.term) >= new Date() ? 'pendente' : 'atrasado'}">${new Date(task.term) >= new Date() ? 'Pending' : 'Late'}</span>
                                         </h4>
                                     </div>
                                     <div class="col-1 task-buttons-box">
@@ -217,22 +212,22 @@ class MemberConfig {
                             <div class="container-fluid">
                                 <div class="row">
                                     <div class="col p-0">
-                                        <h4 class="info-task">${task.name} - Resp. ${task.ownerName}</h4>
+                                        <h4 class="info-task">${task.name} - Owner. ${task.ownerName}</h4>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col p-0">
-                                        <h4 class="info-task">Data de conclusão: <span class="span-date">${(new Date(task.completionDate).getDate()) < 10 ? "0" + (new Date(task.completionDate).getDate()) : (new Date(task.completionDate).getDate())}/${(new Date(task.completionDate).getMonth() + 1) < 10 ? "0" + (new Date(task.completionDate).getMonth() + 1) : (new Date(task.completionDate).getMonth() + 1)}/${new Date(task.completionDate).getFullYear()}</span></h4>
+                                        <h4 class="info-task">Completion date: <span class="span-date">${(new Date(task.completionDate).getDate()) < 10 ? "0" + (new Date(task.completionDate).getDate()) : (new Date(task.completionDate).getDate())}/${(new Date(task.completionDate).getMonth() + 1) < 10 ? "0" + (new Date(task.completionDate).getMonth() + 1) : (new Date(task.completionDate).getMonth() + 1)}/${new Date(task.completionDate).getFullYear()}</span></h4>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col p-0">
-                                        <h4 class="info-task">Categoria: <span class="span-date">${task.category}</span></h4>
+                                        <h4 class="info-task">Category: <span class="span-date">${task.category}</span></h4>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col p-0">
-                                        <h4 class="info-task">Status: <span class="span-status-concluded">Concluído</span></h4>
+                                        <h4 class="info-task">Status: <span class="span-status-concluded">Concluded</span></h4>
                                     </div>
                                 </div>
                             </div>
@@ -249,8 +244,8 @@ class MemberConfig {
                 window.location.href = '#focusONtext';
                 this.#classNamesAndIDs.textArea.innerHTML = '';
                 this.#classNamesAndIDs.textArea.innerHTML = `
-                        <textarea rows="8" cols="100"  placeholder="Escreva aqui..."></textarea>
-                        <button value="${content}" class="btn-send-report" >Enviar relatório</button>`;
+                        <textarea rows="8" cols="100"  placeholder="Write here..."></textarea>
+                        <button value="${content}" class="btn-send-report" >Send report</button>`;
                 const btnUp = document.getElementsByClassName('btn-send-report');
                 btnUp[0].addEventListener('click', this.handleSendReport);
                 break;
@@ -259,7 +254,7 @@ class MemberConfig {
                 this.#classNamesAndIDs.textArea.innerHTML = '';
                 this.#classNamesAndIDs.textArea.innerHTML = `
                         <textarea rows="8" cols="100" disabled>${content}</textarea>
-                        <button value="${content}" class="btn-send-report">Fechar relatório</button>`;
+                        <button value="${content}" class="btn-send-report">Close report</button>`;
                 const btnclose = document.getElementsByClassName('btn-send-report');
                 btnclose[0].addEventListener('click', ()=>{
                     window.location.reload();
@@ -269,7 +264,7 @@ class MemberConfig {
                 this.#classNamesAndIDs.commitsBox.innerHTML = ``;
                 content.forEach(element => {
                     const date = new Date(element.date);
-                    const day = `${date.getDate() < 10 ? '0' + date.getDate() : date.getDate()}/${date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1}/${date.getFullYear()}`;
+                    const day = `${date.getFullYear()}/${date.getDate() < 10 ? '0' + date.getDate() : date.getDate()}/${date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1}`;
                     const hour = `${date.getHours() < 10 ? '0' + date.getHours() : date.getHours()}:${date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()}:${date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()}`;
                     this.#classNamesAndIDs.commitsBox.innerHTML += `
                         <div class="commit">
