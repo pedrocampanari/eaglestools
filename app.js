@@ -169,6 +169,6 @@ setInterval(async () => {
 }, 60000);
 
 
-app.listen(80, '0.0.0.0', () => {
+app.listen(443, '0.0.0.0', () => {
     console.log('Server is running on port 443');
 });
