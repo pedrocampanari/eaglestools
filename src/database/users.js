@@ -8,14 +8,14 @@ router.post('/api/user/add/', async (req, res) => {
     try {
         const user = new schemas.User(req.body);
         await user.save();
-        res.json(user);
         
-        console.log('Criado')
-        res.status(201).json({ message: 'User created successfully' });
-
+        console.log('Criado');
+        return res.status(201).json(user); // Retorna aqui para evitar múltiplas respostas
+    
     } catch (err) {
-        res.status(500).json({ message: 'Error creating user' });
+        return res.status(500).json({ message: 'Error creating user' });
     }
+    
 });
 
 router.post('/api/userInfoEmail/', async (req, res)=>{

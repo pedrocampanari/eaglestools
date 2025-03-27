@@ -23,8 +23,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(databaseRouteTasks);
 app.use(databaseRouteUsers);
 
-
-mongoose.connect("mongodb://localhost:27017/eaglestools").then(() => {
+const URI = 'mongodb+srv://pedrocampanari09:QukKUKWTRs9HdlaR@eaglestools.8tzckzv.mongodb.net/?retryWrites=true&w=majority&appName=eaglestools'
+mongoose.connect(URI).then(() => {
     console.log("Connected to MongoDB");
 }).catch((err) => {
     console.log(err);
@@ -35,6 +35,7 @@ app.get('/tools/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const user = await schemas.User.findById(id);
+        console.log(user)
         if (user.root) {
             res.sendFile(__dirname + '/public/html/admin-dashboard.html');
         } else {
@@ -169,5 +170,5 @@ setInterval(async () => {
 
 
 app.listen(80, '0.0.0.0', () => {
-    console.log('Server is running on port 80');
+    console.log('Server is running on port 443');
 });
