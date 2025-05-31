@@ -5,11 +5,18 @@ const { exec } = require("child_process");
 const path = require("path");
 const fs = require("fs");
 const multer = require("multer");
+const http = require("http");
+const WebSocket = require("ws");
+
+
+
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
 
 app.use(express.json());
 app.use(express.static('public'));
 
-const storage = multer.memoryStorage(); 
+const storage = multer.memoryStorage();
 const upload = multer({ storage: storage })
 const REPO_PATH = path.join(__dirname, "../eaglesfiles");
 
@@ -30,6 +37,9 @@ mongoose.connect(URI).then(() => {
     console.log(err);
 })
 
+app.get('/eagleschat', (req, res)=>{
+    res.sendFile(__dirname + '/public/html/eagleschat.html');
+});
 
 app.get('/tools/:id', async (req, res) => {
     try {
@@ -82,7 +92,7 @@ app.get('/lastCommits', async (req, res) => {
                 message: element.commit.message
             };
         });
-        res.json(lastCommits.slice(0,5));
+        res.json(lastCommits.slice(0, 5));
     } catch (err) {
         console.log(err);
     }
@@ -106,25 +116,25 @@ app.post("/code-dropzone-update", upload.single("file"), (req, res) => {
     // Escrever o arquivo no diretório de destino
     fs.writeFileSync(uploadPath, data);
     return res.status(200).send('Arquivo salvo! Aguarde envio ao GitHub');
-    
+
 });
 
-app.post('/commit-files', (req, res)=>{
+app.post('/commit-files', (req, res) => {
     exec(
         `cd ${REPO_PATH} && git pull origin main && git add . && git commit -m "${req.body.message}" && git push origin main`,
         (error, stdout, stderr) => {
             if (error) {
                 console.log(error);
-                return res.status(500).json({message: `Erro ao executar comando Git: Everything up-to-date`});
+                return res.status(500).json({ message: `Erro ao executar comando Git: Everything up-to-date` });
             }
 
             if (stderr && !stderr.includes("Everything up-to-date") && !stderr.includes("nothing to commit")) {
                 console.log('Envio- GITHUB: OK');
-                return res.status(200).json({message: `Commit realizado com alerta: ${stderr}`});
+                return res.status(200).json({ message: `Commit realizado com alerta: ${stderr}` });
             }
 
             console.log('Envio GITHUB: OK');
-            res.json({message:`Arquivo enviado e commit realizado com sucesso!\n${stdout}`});
+            res.json({ message: `Arquivo enviado e commit realizado com sucesso!\n${stdout}` });
         }
     );
 })
@@ -169,6 +179,58 @@ setInterval(async () => {
 }, 60000);
 
 
-app.listen(443, '0.0.0.0', () => {
+
+function broadcast(data, sender) {
+    wss.clients.forEach(client => {
+        if (client.readyState === WebSocket.OPEN && client !== sender) {
+            client.send(data);
+        }
+    });
+}
+
+
+const messageSchema = new mongoose.Schema({
+    sender: String,
+    text: String,
+    timestamp: { type: Date, default: Date.now },
+});
+const Message = mongoose.model('Message', messageSchema);
+
+wss.on('connection', async (ws) => {
+    console.log('🟢 Novo cliente conectado');
+
+    const history = await Message.find().sort({ timestamp: 1 }).limit(50);
+    history.forEach(msg => {
+        ws.send(`[Histórico] ${msg.sender}: ${msg.text}`);
+    });
+
+    ws.on('message', async (message) => {
+        const msgStr = message.toString(); 
+        const [sender, ...rest] = msgStr.split(':');
+        const text = rest.join(':').trim();
+
+        const msgDoc = new Message({
+            sender: (sender || 'Anônimo').trim(),
+            text: text,
+        });
+
+        try {
+            await msgDoc.save();
+            console.log('💾 Mensagem salva no MongoDB');
+        } catch (err) {
+            console.error('❌ Erro ao salvar mensagem:', err);
+        }
+
+        broadcast(`${msgDoc.sender}: ${msgDoc.text}`, ws);
+    });
+
+    ws.on('close', () => {
+        console.log('🔴 Cliente desconectado');
+    });
+});
+
+
+
+server.listen(443, '0.0.0.0', () => {
     console.log('Server is running on port 443');
 });

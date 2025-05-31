@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eagles Organization</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="../assets/img/favicon/site.webmanifest">
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: #e5ddd5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .chat-container {
+            width: 100%;
+            height: 100vh;
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-header {
+            background-color: #d6d6d6;
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+        }
+
+        .chat-messages {
+            flex: 1;
+            background-color: #ece5dd;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            max-width: 75%;
+            padding: 10px 15px;
+            margin: 8px 0;
+            border-radius: 7.5px;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .message.you {
+            align-self: flex-end;
+            background-color: #dcf8c6;
+            border-bottom-right-radius: 0;
+        }
+
+        .message.other {
+            align-self: flex-start;
+            background-color: #fff;
+            border-bottom-left-radius: 0;
+        }
+
+        .system-message {
+            align-self: center;
+            font-size: 0.85em;
+            color: #555;
+            margin: 10px 0;
+        }
+
+        .chat-input {
+            display: flex;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-top: 1px solid #ccc;
+        }
+
+        #message {
+            flex: 1;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 20px;
+            font-size: 1em;
+            outline: none;
+        }
+
+        #send {
+            background-color: #00b3aa;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-left: 10px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #send:hover {
+            background-color: #00ffd9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="chat-container">
+        <header>
+        <div class="container pt-3 pb-2">
+            <div class="row">
+                <div class="col">
+                    <img src="../assets/img/logotype/image.svg" width="60rem" alt="Logotipo">
+                </div>
+                <div class="col">
+                    <div class="user-box-item  d-flex justify-content-end pt-3">
+                        <h3 class="user-box-link">Hello! <span id="username"></span></h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </header>
+        <div class="chat-messages" id="chat"></div>
+        <div class="chat-input">
+            <input type="text" id="message" placeholder="Digite uma mensagem..." />
+            <button id="send">Enviar</button>
+        </div>
+    </div>
+
+    <script>
+        const socket = new WebSocket('ws://0.0.0.0:443');
+        const chat = document.getElementById('chat');
+        const input = document.getElementById('message');
+        const send = document.getElementById('send');
+
+        const params = new URLSearchParams(window.location.search);
+        const user = params.get('user'); 
+
+        document.getElementById('username').innerText = user;
+        const username = user;
+
+        socket.addEventListener('open', () => {
+            appendSystemMessage('🟢 Conectado ao chat');
+        });
+
+        socket.addEventListener('message', (event) => {
+            const msg = event.data;
+
+            if (msg.startsWith(`${username}:`)) {
+                appendMessage(msg.replace(`${username}:`, '').trim(), 'you');
+            } else if (msg.startsWith('[Histórico]')) {
+                const clean = msg.replace('[Histórico]', '').trim();
+                appendMessage(clean, 'other');
+            } else {
+                appendMessage(msg, 'other');
+            }
+        });
+
+        send.addEventListener('click', () => {
+            sendMessage();
+        });
+
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        function sendMessage() {
+            const text = input.value.trim();
+            if (text !== '') {
+                const formatted = `${username}: ${text}`;
+                socket.send(formatted);
+                input.value = '';
+
+                // ✅ Mostrar imediatamente no próprio chat:
+                appendMessage(text, 'you');
+            }
+        }
+
+        function appendMessage(text, type) {
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('message', type);
+            msgDiv.textContent = text;
+            chat.appendChild(msgDiv);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function appendSystemMessage(text) {
+            const div = document.createElement('div');
+            div.classList.add('system-message');
+            div.textContent = text;
+            chat.appendChild(div);
+            chat.scrollTop = chat.scrollHeight;
+        }
+    </script>
+</body>
+
+</html>

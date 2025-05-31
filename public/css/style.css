@@ -325,6 +325,17 @@ footer{
     transition: 0.3s;
 }
 
+#link_eagleschat{
+    padding: 15px;
+    border-radius: 100%;
+    position: fixed;
+    z-index: 1100;
+    bottom: 5%;
+    left: 80%;
+    background-color:#00b1b8;
+    border: 7px solid #00e3eb;
+}
+
 #link_comments{
     padding: 15px;
     border-radius: 100%;
@@ -336,10 +347,10 @@ footer{
     border: 7px solid #00e3eb;
 }
 
-#link_comments > img {
+#link_comments > img, #link_eagleschat > img {
     width: 3rem;
 }
-#link_comments:hover{
+#link_comments:hover, #link_eagleschat:hover{
     transition: 0.3s;
     border: 7px solid #009ba0;
     background-color: #00e3eb;

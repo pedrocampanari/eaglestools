@@ -126,6 +126,8 @@ class MemberConfig {
     renderUserInfo() {
         this.#controlSpans.userInfo.innerHTML = this.#userInfo.name;
         document.getElementById('comments').innerHTML = `<a id="link_comments" href="/allposts?id=${this.#userInfo.name}&name=${this.#userInfo.name}"><img src="../assets/img/icon/people.png" alt="Comentários" srcset=""></a>`
+        document.getElementById('eagleschat').innerHTML = `<a id="link_eagleschat" href="/eagleschat?user=${this.#userInfo.name}"><img src="../assets/img/icon/messenger.png" alt="Chat" srcset=""></a>`
+
     }
 
     renderTasksInProgress() {
