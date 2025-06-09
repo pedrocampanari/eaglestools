@@ -199,9 +199,9 @@ const Message = mongoose.model('Message', messageSchema);
 wss.on('connection', async (ws) => {
     console.log('🟢 Novo cliente conectado');
 
-    const history = await Message.find().sort({ timestamp: 1 }).limit(50);
+    const history = await Message.find().sort({ timestamp: 1 });
     history.forEach(msg => {
-        ws.send(`[Histórico] ${msg.sender}: ${msg.text}`);
+        ws.send(`[Histórico] ${msg.sender}: ${msg.text} - ${msg.timestamp}`);
     });
 
     ws.on('message', async (message) => {
